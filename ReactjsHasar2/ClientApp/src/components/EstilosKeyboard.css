@@ -1,0 +1,32 @@
+﻿#productos {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+body {
+    background-color: cadetblue;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+
+#encabezado,#cuerpo {
+    border: 1px solid black;
+    padding: 30px;
+}
+
+#btnPagar {
+    width: 120px;
+    height: 60px;
+    font-size: 20px;
+    /*float: right;*/
+}
+
