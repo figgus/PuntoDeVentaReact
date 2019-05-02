@@ -7,14 +7,15 @@
 body {
     background-color: cadetblue;
 }
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
+
+.tablaNormal {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 15px;
 }
 
-tr:nth-child(even) {
-    background-color: #dddddd;
+.tablaOrden {
+    padding: 15px;
 }
 
 

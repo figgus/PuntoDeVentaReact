@@ -12,7 +12,9 @@ namespace ReactjsHasar2.DAL
         public DbSet<libro_iva> libro_iva { get; set; }
         public DbSet<plu> plu { get; set; }
         public DbSet<Hist_plu> Hist_plu { get; set; }
-
+       // public DbSet<Categoria_Producto> Categoria_Producto { get; set; }
+        public DbSet<Subfuncion> subfuncion { get; set; }
+        public DbSet<Zeta> Zeta { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -128,28 +128,26 @@ export class Keyboard extends Component {
                         <button className="btn btn-success" onClick={() => this.VerificarExistencia()}>Agregar</button>
                     </p>
                     <div></div>
-                    <table id="productos">
+                    <table className="tablaNormal" id="productos">
                         <tr id="tr">
-                            <th>N°</th>
-                            <th>Codigo</th>
-                            <th>Codigo de barra</th>
-                            <th>Descripcion</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
+                            <th className="tablaNormal">N°</th>
+                            <th className="tablaNormal">Codigo</th>
+                            <th className="tablaNormal">Codigo de barra</th>
+                            <th className="tablaNormal">Descripcion</th>
+                            <th className="tablaNormal">Precio</th>
+                            <th className="tablaNormal">Cantidad</th>
                         </tr>
                         <tbody>
                             {
                                 this.state.productos.map(function (item, i) {
-                                    console.log('el elemento es ');
-                                    console.log(item);
                                     //console.log(item[i]);
                                     return <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>  {item.codigoScanner} </td>
-                                        <td> {item.codigoScanner} </td>
-                                        <td> {item.descripcion} </td>
-                                        <td> {item.costo} </td>
-                                        <td> 1 </td>
+                                        <td className="tablaNormal">{i + 1}</td>
+                                        <td className="tablaNormal">  {item.codigoScanner} </td>
+                                        <td className="tablaNormal"> {item.codigoScanner} </td>
+                                        <td className="tablaNormal"> {item.descripcion} </td>
+                                        <td className="tablaNormal"> {item.costo} </td>
+                                        <td className="tablaNormal"> 1 </td>
                                     </tr>
                             })
                             }

@@ -18,8 +18,10 @@ export class MenuPrincipal extends Component {
                 <LinkContainer to={'/facturar'} exact>
                     <button >Facturar</button>
                 </LinkContainer>
+                <LinkContainer to={'/cierreCaja'} exact>
+                    <button >Cierre de caja</button>
+                </LinkContainer>
                 
-                <button >Cierre de caja</button>
                 <LinkContainer to={'/total'} exact>
                     <button >Total Vendido</button>
                 </LinkContainer>
