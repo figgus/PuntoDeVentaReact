@@ -98,6 +98,7 @@ export class TotalVendido extends Component {
     render() {
         return (
             <div id="PorDepartamentos">
+
                 <h1>Total vendido</h1>
                 <h2>Departamentos</h2>
                 <table className="tablaNormal">
@@ -131,18 +132,20 @@ export class TotalVendido extends Component {
                         
                     </tbody>
                 </table>
+
+
                 <h2>Medios de pago</h2>
-                <table >
+                <table className="tablaNormal">
                     <tr>
-                        <th>N°</th>
-                        <th>Medio de pago</th>
-                        <th>Monto total</th>
+                        <th className="tablaNormal">N°</th>
+                        <th className="tablaNormal">Medio de pago</th>
+                        <th className="tablaNormal">Monto total</th>
                     </tr>
+
                     
                 </table>
                 <p></p>
                 <Link to="/menu"><button className="btn btn-secondary">Cerrar</button></Link>
-                      
             </div>
         );
     }

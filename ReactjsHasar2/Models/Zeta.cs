@@ -8,8 +8,9 @@ namespace ReactjsHasar2.Models
 {
     public class Zeta
     {
-        public int NroPOS { get; set; }
         [Key]
+        public int ID { get; set; }
+        public int NroPOS { get; set; }
         public int NroZeta { get; set; }
         public DateTime Fecha { get; set; }
     }

@@ -15,8 +15,7 @@ namespace ReactjsHasar2.Controllers
     public class ZetasController : ControllerBase
     {
         private readonly ContextoBDMysql _context=new ContextoBDMysql();
-
-     
+        
 
         // GET: api/Zetas
         [HttpGet]
@@ -53,7 +52,7 @@ namespace ReactjsHasar2.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != zeta.NroZeta)
+            if (id != zeta.ID)
             {
                 return BadRequest();
             }
@@ -83,15 +82,35 @@ namespace ReactjsHasar2.Controllers
         [HttpPost]
         public async Task<IActionResult> PostZeta([FromBody] Zeta zeta)
         {
+            //crea nueva zeta - pasa todas las ventas asociadas a ella la tabla hist_fn y vacia la tabla hist_plu
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
+            zeta.Fecha = DateTime.Now;
+            zeta.NroZeta=_context.Zeta.Max(p=>p.NroZeta)+1;
             _context.Zeta.Add(zeta);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetZeta", new { id = zeta.NroZeta }, zeta);
+            await _context.SaveChangesAsync();
+            var ventasDia = _context.Hist_plu;
+            foreach (Hist_plu venta in ventasDia)
+            {
+                _context.Hist_fn.Add(new Hist_fn { NroPOS = venta.NroPos,
+                    NroZeta =zeta.NroZeta,
+                    Fecha =DateTime.Now,
+                    CodigoFn =102,
+                    CodigoSubFn =_context.plu.FirstOrDefault(p=>p.CodigoPLU==venta.CodigoPLU).CodigoSeccion,
+                    Monto=venta.Monto,
+                    PorcIVA=19,
+                    Cantidad=venta.Cantidad,
+                    FechaUltAct=DateTime.Now.ToLongDateString(),
+                    MontoIVA=venta.Monto*0.19,
+                    CodigoOperador=9999
+                });
+            }
+            _context.SaveChanges();
+            _context.Database.ExecuteSqlCommand("truncate table hist_plu");
+            return CreatedAtAction("GetZeta", new { id = zeta.ID }, zeta);
         }
 
         // DELETE: api/Zetas/5
@@ -111,13 +130,15 @@ namespace ReactjsHasar2.Controllers
 
             _context.Zeta.Remove(zeta);
             await _context.SaveChangesAsync();
-
+            
             return Ok(zeta);
         }
 
         private bool ZetaExists(int id)
         {
-            return _context.Zeta.Any(e => e.NroZeta == id);
+            return _context.Zeta.Any(e => e.ID == id);
         }
+
+
     }
 }

@@ -15,6 +15,7 @@ namespace ReactjsHasar2.DAL
        // public DbSet<Categoria_Producto> Categoria_Producto { get; set; }
         public DbSet<Subfuncion> subfuncion { get; set; }
         public DbSet<Zeta> Zeta { get; set; }
+        public DbSet<Hist_fn> Hist_fn { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

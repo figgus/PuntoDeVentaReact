@@ -14,10 +14,10 @@ export default class App extends Component {
   render() {
       return (
           <div>
-              <Route path="/Menu" component={MenuPrincipal} />
-              <Route path="/facturar" component={Keyboard} />
-              <Route path="/total" component={TotalVendido} />
-              <Route path="/cierreCaja" component={CierreCaja} />
+                  <Route path="/menu" component={MenuPrincipal}> </Route>
+                  <Route path="/facturar" component={Keyboard} />
+                  <Route path="/total" component={TotalVendido} />
+                  <Route path="/cierreCaja" component={CierreCaja} />
           </div>
     );
   }
