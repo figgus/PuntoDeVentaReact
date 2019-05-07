@@ -16,12 +16,16 @@ namespace ReactjsHasar2.DAL
         public DbSet<Subfuncion> subfuncion { get; set; }
         public DbSet<Zeta> Zeta { get; set; }
         public DbSet<Hist_fn> Hist_fn { get; set; }
-
+        public DbSet<TipoDocumento> Tipo_Documento { get; set; }
+        public DbSet<NivelSeguridad> Nivel_Seguridad { get; set; }
+        public DbSet<Operador> Operador { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseMySQL("Server=localhost;Database=puntodeventa;Uid=joaquin;Pwd=1234;Convert Zero Datetime=True");
         }
+
+        
     }
 }

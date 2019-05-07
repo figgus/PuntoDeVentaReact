@@ -70,10 +70,10 @@ namespace ReactjsHasar2.Controllers
         //}
 
         //[HttpGet]
-        //[Route("traerEncabezados")]
+        //[Route("api/traerCategoria")]//
         //public ActionResult TraerEncabezados()
         //{
-        //    return Ok(contexto.Encabezadoes);
+        //    return Ok(contexto.);
         //}
     }
 }

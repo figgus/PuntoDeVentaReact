@@ -10,6 +10,7 @@ namespace ReactjsHasar2.Models
     {
         [Key]
         public int ID { get; set; }
+        public int? CodPLU { get; set; }
         public int NroPOS { get; set; }
         public int NroZeta { get; set; }
         public DateTime Fecha { get; set; }

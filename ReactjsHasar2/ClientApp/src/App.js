@@ -7,6 +7,7 @@ import { Cabecera } from './components/Cebecera';
 import { MenuPrincipal } from './components/MenuPrincipal';
 import { TotalVendido } from './components/TotalVendido';
 import { CierreCaja } from './components/CierreCaja';
+import { Operadores } from './components/Operadores';
 
 export default class App extends Component {
   displayName = App.name
@@ -14,10 +15,11 @@ export default class App extends Component {
   render() {
       return (
           <div>
-                  <Route path="/menu" component={MenuPrincipal}> </Route>
-                  <Route path="/facturar" component={Keyboard} />
-                  <Route path="/total" component={TotalVendido} />
-                  <Route path="/cierreCaja" component={CierreCaja} />
+              <Route path="/menu" component={MenuPrincipal}> </Route>
+              <Route path="/facturar" component={Keyboard} />
+              <Route path="/total" component={TotalVendido} />
+              <Route path="/cierreCaja" component={CierreCaja} />
+              <Route path="/Operadores" component={Operadores} />
           </div>
     );
   }

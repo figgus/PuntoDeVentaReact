@@ -9,7 +9,8 @@ export class TotalVendido extends Component {
         super();
         this.state = {
             productosVendidos: [],
-            categorias: []
+            categorias: [],
+            filtroPorFecha: false
         };
         this.ListarVentasDelDia();
     }
@@ -18,7 +19,7 @@ export class TotalVendido extends Component {
         const url = "http://localhost:61063/api/Hist_plu";
         const response = await fetch(url);
         var data = await response.json();
-
+        console.log(data);
         this.setState({ productosVendidos: data });
         this.ListarCategorias();
     }
@@ -33,10 +34,7 @@ export class TotalVendido extends Component {
             var data = await response.json();
             productos[i]['categoriaProd'] = data['descSubFn'];
         }
-        console.log('las categorias en bruto son');
-        console.log(this.CategoriasBruto(productos));
         this.setState({ productosVendidos: productos, categorias: this.RemoverDuplicados(this.CategoriasBruto(productos))});
-        console.log(this.state);
     }
 
 
@@ -45,6 +43,7 @@ export class TotalVendido extends Component {
         var productos = this.state.productosVendidos;
         var cont = 0;
         productos.forEach(function (element) {
+
             cont = cont + element['monto'];
         })
         return cont;
@@ -95,11 +94,68 @@ export class TotalVendido extends Component {
         return cont;
     }
 
+    Filtrar() {
+        if (!this.state.filtroPorFecha) {
+            this.setState({ filtroPorFecha: true });
+        }
+        
+    }
+
+    NoFiltrar() {
+        if (this.state.filtroPorFecha) {
+            this.setState({ filtroPorFecha: false });
+        }
+    }
+
+    async TraerDatosPorFecha() {
+        var fechaSeleccionada = document.getElementById('fecha').value;
+        const url = "http://localhost:61063/api/Zetas/" + fechaSeleccionada;
+        const response = await fetch(url);
+        var data = await response.json();
+        console.log(data);
+        this.setState({ productosVendidos: data });
+        this.ListarCategoriasHistorico();
+    }
+
+    async ListarCategoriasHistorico() {
+        var productos = this.state.productosVendidos;
+
+        for (var i = 0; i < productos.length; i++) {
+            var url = "http://localhost:61063/api/Subfuncions/" + productos[i]['codigoSubFn'];
+            const response = await fetch(url);
+            var data = await response.json();
+            productos[i]['categoriaProd'] = data['descSubFn'];
+        }
+        
+        this.setState({ productosVendidos: productos, categorias: this.RemoverDuplicados(this.CategoriasBruto(productos)) });
+    }
+
+    Procesar() {
+        if (this.state.filtroPorFecha) {
+            this.TraerDatosPorFecha();
+        }
+        else {
+            this.ListarVentasDelDia()
+        }
+    }
+
     render() {
         return (
             <div id="PorDepartamentos">
-
-                <h1>Total vendido</h1>
+                <div className="darBorde" id="opciones">
+                    <h1>Total vendido</h1>
+                    <p>
+                        <input type="radio" checked name="tipoBusqueda" value="tipoBusqueda" onClick={() => { this.NoFiltrar() }} /> Venta acumulada
+                        <input type="radio" name="tipoBusqueda" value="tipoBusqueda" onClick={() => { this.Filtrar() }} /> Venta historica
+                    </p>
+                    <p>
+                        {
+                            this.state.filtroPorFecha ? (<div><input type="date" id="fecha" /></div>) : (<div></div>)//agregar el input date
+                        }
+                    </p>
+                    <input type="button" className="btn btn-primary" onClick={() => { this.Procesar() }} value="Procesar" />
+                </div>
+                <div className="darBorde">
                 <h2>Departamentos</h2>
                 <table className="tablaNormal">
                     <thead>
@@ -118,7 +174,7 @@ export class TotalVendido extends Component {
                                     <td className="tablaNormal">{item} </td>
                                     <td className="tablaNormal">{this.CantidadPorCategoria(item)}</td>
                                     <td className="tablaNormal"> {this.TotalPorCategoria(item)} </td>
-                        </tr>
+                                </tr>
                             ))
                             
                             
@@ -144,8 +200,10 @@ export class TotalVendido extends Component {
 
                     
                 </table>
-                <p></p>
+                    <p></p>
+                    
                 <Link to="/menu"><button className="btn btn-secondary">Cerrar</button></Link>
+                </div>
             </div>
         );
     }

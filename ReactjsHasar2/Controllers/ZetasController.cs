@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -25,22 +26,24 @@ namespace ReactjsHasar2.Controllers
         }
 
         // GET: api/Zetas/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetZeta([FromRoute] int id)
+        [HttpGet("{fecha}")]
+        public async Task<IActionResult> GetZeta([FromRoute] string fecha)//los productos registrados en el cierre de caja de la fecha ingresada
         {
+            //PENDIENTE
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var zeta = await _context.Zeta.FindAsync(id);
+            //DateTime fechaF = DateTime.ParseExact(fecha, "yyyy-d-m", CultureInfo.InvariantCulture);
+            var zeta = await _context.Zeta.FirstOrDefaultAsync(p=>p.Fecha== DateTime.Parse(fecha));
+            var res = _context.Hist_fn.Where(p => p.NroZeta == zeta.NroZeta & (p.CodigoFn==102 | p.CodigoFn == 105)).ToList() ;
 
             if (zeta == null)
             {
                 return NotFound();
             }
 
-            return Ok(zeta);
+            return Ok(res);
         }
 
         // PUT: api/Zetas/5
@@ -96,16 +99,17 @@ namespace ReactjsHasar2.Controllers
             foreach (Hist_plu venta in ventasDia)
             {
                 _context.Hist_fn.Add(new Hist_fn { NroPOS = venta.NroPos,
-                    NroZeta =zeta.NroZeta,
-                    Fecha =DateTime.Now,
-                    CodigoFn =102,
-                    CodigoSubFn =_context.plu.FirstOrDefault(p=>p.CodigoPLU==venta.CodigoPLU).CodigoSeccion,
-                    Monto=venta.Monto,
-                    PorcIVA=19,
-                    Cantidad=venta.Cantidad,
-                    FechaUltAct=DateTime.Now.ToLongDateString(),
-                    MontoIVA=venta.Monto*0.19,
-                    CodigoOperador=9999
+                    NroZeta = zeta.NroZeta,
+                    Fecha = DateTime.Now,
+                    CodigoFn = 102,
+                    CodigoSubFn = _context.plu.FirstOrDefault(p => p.CodigoPLU == venta.CodigoPLU).CodigoSeccion,
+                    Monto = venta.Monto,
+                    PorcIVA = 19,
+                    Cantidad = venta.Cantidad,
+                    FechaUltAct = DateTime.Now.ToShortDateString(),
+                    MontoIVA = venta.Monto * 0.19,
+                    CodigoOperador = 9999,
+                    CodPLU = venta.CodigoPLU
                 });
             }
             _context.SaveChanges();

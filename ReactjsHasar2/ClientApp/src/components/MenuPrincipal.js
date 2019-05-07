@@ -21,7 +21,11 @@ export class MenuPrincipal extends Component {
                 <LinkContainer to={'/cierreCaja'} exact>
                     <button >Cierre de caja</button>
                 </LinkContainer>
-                
+
+                <LinkContainer to={'/Operadores'} exact>
+                    <button >Operadores</button>
+                </LinkContainer>
+
                 <LinkContainer to={'/total'} exact>
                     <button >Total Vendido</button>
                 </LinkContainer>
