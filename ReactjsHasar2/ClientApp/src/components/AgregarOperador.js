@@ -4,6 +4,7 @@ import './Operadores.css';
 
 
 export class AgregarOperador extends Component {
+    //borrar si no se usa
     displayName = AgregarOperador.name
 
     constructor() {

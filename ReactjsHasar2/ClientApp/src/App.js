@@ -8,6 +8,7 @@ import { MenuPrincipal } from './components/MenuPrincipal';
 import { TotalVendido } from './components/TotalVendido';
 import { CierreCaja } from './components/CierreCaja';
 import { Operadores } from './components/Operadores';
+import { Arqueo } from './components/Arqueo';
 
 export default class App extends Component {
   displayName = App.name
@@ -20,6 +21,7 @@ export default class App extends Component {
               <Route path="/total" component={TotalVendido} />
               <Route path="/cierreCaja" component={CierreCaja} />
               <Route path="/Operadores" component={Operadores} />
+              <Route path="/Arqueo" component={Arqueo} />
           </div>
     );
   }

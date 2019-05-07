@@ -10,24 +10,24 @@ namespace ReactjsHasar2.Models
     {
         [Key]
         public int CodigoOperador { get; set; }
-        public int Apellido { get; set; }
-        public int ApellidoMaterno { get; set; }
-        public int Nombre { get; set; }
-        public int Telefono { get; set; }
-        public int Direccion { get; set; }
-        public int Localidad { get; set; }
-        public int CodigoPostal { get; set; }
-        public int Provincia { get; set; }
-        public int NroLegajo { get; set; }
-        public int CodigoDoc { get; set; }
-        public int NroDocumento { get; set; }
-        public int Pais { get; set; }
+        public string Apellido { get; set; }
+        public string ApellidoMaterno { get; set; }
+        public string Nombre { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
+        public string Localidad { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Provincia { get; set; }
+        public string NroLegajo { get; set; }
+        public string CodigoDoc { get; set; }
+        public string NroDocumento { get; set; }
+        public string Pais { get; set; }
         public int NivelPermiso { get; set; }
-        public int Clave { get; set; }
-        public int Foto { get; set; }
-        public int FechaUltAct { get; set; }
+        public string Clave { get; set; }
+        public string Foto { get; set; }
+        public string FechaUltAct { get; set; }
         public int fIsPlayero { get; set; }
-        public int fEsJefe { get; set; }
+        public string fEsJefe { get; set; }
         
     }
 }
