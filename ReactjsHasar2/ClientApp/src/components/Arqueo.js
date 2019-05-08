@@ -39,7 +39,7 @@ export class Arqueo extends Component {
         console.log(url);
         const response = await fetch(url);
         var data = await response.json();
-        
+        console.log(data);
         this.setState({ ventas: data });
     }
 
@@ -76,7 +76,51 @@ export class Arqueo extends Component {
 
         document.getElementById('fecha').value = today;
     }
-    
+
+    GetMontoTotal() {
+        var ventas = this.state.ventas;
+        var cont = 0;
+        ventas.forEach(function (element) {
+            cont = cont + element.monto;
+        });
+        return cont;
+    }
+
+    GetRendidoTotal() {
+        var ventas = this.state.ventas;
+        var cont = 0;
+        ventas.forEach(function (element) {
+            cont = cont + element.rendido;
+        });
+        return cont;
+    }
+
+    GetRecibidoTotal() {
+        var ventas = this.state.ventas;
+        var cont = 0;
+        ventas.forEach(function (element) {
+            cont = cont + element.recibido;
+        });
+        return cont;
+    }
+
+    GetRetiradoTotal() {
+        var ventas = this.state.ventas;
+        var cont = 0;
+        ventas.forEach(function (element) {
+            cont = cont + element.retirado;
+        });
+        return cont;
+    }
+
+    GetDiferenciaTotal() {
+        var ventas = this.state.ventas;
+        var cont = 0;
+        ventas.forEach(function (element) {
+            cont = cont + element.diferencia;
+        });
+        return cont;
+    }
 
     render() {
         return (
@@ -120,10 +164,27 @@ export class Arqueo extends Component {
                                 <td className="tablaNormal">  {item.diferencia}</td>
                             </tr>
                             ))
+                            
 
-
-                        }
-                    
+                }
+                        < tr >
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal"></td>
+                        </tr>
+                        < tr >
+                            <td className="tablaNormal">Totales</td>
+                            <td className="tablaNormal"></td>
+                            <td className="tablaNormal">{this.GetMontoTotal()}</td>
+                            <td className="tablaNormal">{this.GetRendidoTotal()}</td>
+                            <td className="tablaNormal">{this.GetRecibidoTotal()}</td>
+                            <td className="tablaNormal">{this.GetRetiradoTotal()}</td>
+                            <td className="tablaNormal">{this.GetDiferenciaTotal()}</td>
+                        </tr>
                     </table>
                 </div>
                 <Link to="/menu"> <button className="btn btn-secondary">Cerrar</button></Link>
