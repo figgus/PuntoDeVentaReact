@@ -19,7 +19,6 @@ export class TotalVendido extends Component {
         const url = "http://localhost:61063/api/Hist_plu";
         const response = await fetch(url);
         var data = await response.json();
-        console.log(data);
         this.setState({ productosVendidos: data });
         this.ListarCategorias();
     }

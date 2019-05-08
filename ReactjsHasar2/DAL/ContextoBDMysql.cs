@@ -26,6 +26,8 @@ namespace ReactjsHasar2.DAL
             optionsBuilder.UseMySQL("Server=localhost;Database=puntodeventa;Uid=joaquin;Pwd=1234;Convert Zero Datetime=True");
         }
 
+        public DbSet<ReactjsHasar2.Models.Historico_rendicion> Historico_rendicion { get; set; }
+
         
     }
 }

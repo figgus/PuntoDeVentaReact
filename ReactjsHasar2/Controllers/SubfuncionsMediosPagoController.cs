@@ -12,30 +12,29 @@ namespace ReactjsHasar2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubfuncionsCategoriasController : ControllerBase
+    public class SubfuncionsMediosPagoController : ControllerBase
     {
-        //quizas borrar
         private readonly ContextoBDMysql _context=new ContextoBDMysql();
 
         
 
-        // GET: api/SubfuncionsCategorias
+        // GET: api/SubfuncionsMediosPago
         [HttpGet]
         public IEnumerable<Subfuncion> Getsubfuncion()
         {
-            return _context.subfuncion.Where(p=>p.CodigoFn==102);
+            return _context.subfuncion.Where(p=>p.CodigoFn==103);
         }
 
-        // GET: api/SubfuncionsCategorias/5
-        [HttpGet("{CodigoPlu}")]
-        public async Task<IActionResult> GetSubfuncion([FromRoute] int CodigoPlu)//ingresa el codigo de un producto (plu) y devuelve el nombre de su categoria
+        // GET: api/SubfuncionsMediosPago/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSubfuncion([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var producto = _context.plu.FirstOrDefault(p => p.CodigoPLU == CodigoPlu);
-            var subfuncion = await _context.subfuncion.FirstOrDefaultAsync(p => (p.CodigoSubFn == producto.CodigoSeccion) && (p.CodigoFn == 102));
+
+            var subfuncion = await _context.subfuncion.FindAsync(id);
 
             if (subfuncion == null)
             {
@@ -45,9 +44,7 @@ namespace ReactjsHasar2.Controllers
             return Ok(subfuncion);
         }
 
-
-
-        // PUT: api/SubfuncionsCategorias/5
+        // PUT: api/SubfuncionsMediosPago/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubfuncion([FromRoute] int id, [FromBody] Subfuncion subfuncion)
         {
@@ -82,7 +79,7 @@ namespace ReactjsHasar2.Controllers
             return NoContent();
         }
 
-        // POST: api/SubfuncionsCategorias
+        // POST: api/SubfuncionsMediosPago
         [HttpPost]
         public async Task<IActionResult> PostSubfuncion([FromBody] Subfuncion subfuncion)
         {
@@ -97,7 +94,7 @@ namespace ReactjsHasar2.Controllers
             return CreatedAtAction("GetSubfuncion", new { id = subfuncion.ID }, subfuncion);
         }
 
-        // DELETE: api/SubfuncionsCategorias/5
+        // DELETE: api/SubfuncionsMediosPago/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubfuncion([FromRoute] int id)
         {
@@ -122,13 +119,5 @@ namespace ReactjsHasar2.Controllers
         {
             return _context.subfuncion.Any(e => e.ID == id);
         }
-
-        //[Route("/id")]
-        //[HttpGet("{id}")]
-        //public ActionResult test(int id)
-        //{
-        //    return Ok(_context.subfuncion.FirstOrDefault(p => p.CodigoFn == 102 & p.CodigoSubFn== id));
-        //}
-
     }
 }
