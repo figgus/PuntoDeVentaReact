@@ -32,6 +32,8 @@ export class AgregarOperador extends Component {
         this.setState({ NivelSeguridad: data });
     }
 
+    
+
     render() {
         return (
             <div>

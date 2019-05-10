@@ -39,7 +39,6 @@ export class Arqueo extends Component {
         console.log(url);
         const response = await fetch(url);
         var data = await response.json();
-        console.log(data);
         this.setState({ ventas: data });
     }
 
@@ -47,7 +46,6 @@ export class Arqueo extends Component {
         var codigoFiltro = document.getElementById('codigoOperador').value;
         codigoFiltro = codigoFiltro.substr(0, codigoFiltro.indexOf('-'));
         this.setState({ codigoOperador: codigoFiltro });
-        
     }
 
 

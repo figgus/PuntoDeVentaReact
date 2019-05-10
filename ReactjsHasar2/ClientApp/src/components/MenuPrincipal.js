@@ -14,7 +14,8 @@ export class MenuPrincipal extends Component {
     render() {
         return (
             <div>
-                <p> Ventas: </p>
+                <p> <h1> Ventas: </h1> </p>
+                <hr/>
                 <LinkContainer to={'/facturar'} exact>
                     <button >Facturar</button>
                 </LinkContainer>
@@ -33,7 +34,54 @@ export class MenuPrincipal extends Component {
                 <LinkContainer to={'/total'} exact>
                     <button >Total Vendido</button>
                 </LinkContainer>
-                
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Informe X - Z</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >IVA Ventas</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Cambio de Operador</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Listados e Informes</button>
+                </LinkContainer>
+                <p></p>
+
+
+                <p><h1>Stock y Compras</h1></p>
+                <hr/>
+                <LinkContainer to={'/Articulos'} exact>
+                    <button >Articulos</button>
+                </LinkContainer>
+                <LinkContainer to={'/cierreCaja'} exact>
+                    <button >Proveedores y gastos</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/Operadores'} exact>
+                    <button >Conceptos</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/Arqueo'} exact>
+                    <button >Movimientos</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Listados de Stock</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Cambio de precios</button>
+                </LinkContainer>
+
+                <LinkContainer to={'/total'} exact>
+                    <button >Impresion de estiquetas</button>
+                </LinkContainer>
+
             </div>
         );
     }

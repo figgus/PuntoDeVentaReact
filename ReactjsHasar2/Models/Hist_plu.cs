@@ -12,6 +12,7 @@ namespace ReactjsHasar2.Models
         public int ID { get; set; }
         public DateTime Fecha { get; set; }
         public int CodigoPLU { get; set; }
+        public int? MedioPago { get; set; }
         public int NroPos { get; set; }
         public double Cantidad { get; set; }
         public double Monto { get; set; }

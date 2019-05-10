@@ -9,6 +9,7 @@ import { TotalVendido } from './components/TotalVendido';
 import { CierreCaja } from './components/CierreCaja';
 import { Operadores } from './components/Operadores';
 import { Arqueo } from './components/Arqueo';
+import { Articulos } from './components/Articulos';
 
 export default class App extends Component {
   displayName = App.name
@@ -22,6 +23,8 @@ export default class App extends Component {
               <Route path="/cierreCaja" component={CierreCaja} />
               <Route path="/Operadores" component={Operadores} />
               <Route path="/Arqueo" component={Arqueo} />
+
+              <Route path="/Articulos" component={Articulos} />
           </div>
     );
   }

@@ -27,14 +27,14 @@ namespace ReactjsHasar2.Controllers
 
         // GET: api/SubfuncionsMediosPago/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSubfuncion([FromRoute] int id)
+        public async Task<IActionResult> GetSubfuncion([FromRoute] int id)//trae un medio de pago por su id
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var subfuncion = await _context.subfuncion.FindAsync(id);
+            var subfuncion = await _context.subfuncion.FirstOrDefaultAsync(p => p.CodigoFn == 103 & p.CodigoSubFn==id);
 
             if (subfuncion == null)
             {
