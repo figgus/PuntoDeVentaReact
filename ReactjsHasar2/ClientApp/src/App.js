@@ -10,6 +10,9 @@ import { CierreCaja } from './components/CierreCaja';
 import { Operadores } from './components/Operadores';
 import { Arqueo } from './components/Arqueo';
 import { Articulos } from './components/Articulos';
+import { AdministradorFolios } from './components/AdministradorFolios';
+import { FoliosLocal } from './components/FoliosLocal';
+
 
 export default class App extends Component {
   displayName = App.name
@@ -25,6 +28,9 @@ export default class App extends Component {
               <Route path="/Arqueo" component={Arqueo} />
 
               <Route path="/Articulos" component={Articulos} />
+
+              <Route path="/AdministradorFolios" component={AdministradorFolios} />
+              <Route path="/FoliosLocal" component={FoliosLocal} />
           </div>
     );
   }

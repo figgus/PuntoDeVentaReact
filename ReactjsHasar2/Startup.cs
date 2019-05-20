@@ -42,7 +42,6 @@ namespace ReactjsHasar2
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

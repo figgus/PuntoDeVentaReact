@@ -82,6 +82,15 @@ export class MenuPrincipal extends Component {
                     <button >Impresion de estiquetas</button>
                 </LinkContainer>
 
+                <p><h1>Administracion</h1></p>
+                <hr />
+                <LinkContainer to={'/AdministradorFolios'} exact>
+                    <button >Servicio Folios </button>
+                </LinkContainer>
+                <LinkContainer to={'/FoliosLocal'} exact>
+                    <button > Folios Locales </button>
+                </LinkContainer>
+
             </div>
         );
     }

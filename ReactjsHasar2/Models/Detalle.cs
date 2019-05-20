@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ReactjsHasar2.Models
+namespace ReactjsHasar2.Models.ModelsDTE
 {
     public class Detalle
     {
         public int ID { get; set; }
-        public int EncabezadoID { get; set; }
-        public Encabezado Encabezado { get; set; }
+        //public int EncabezadoID { get; set; }
+        //public Encabezado Encabezado { get; set; }
 
-        public int numeroLinea { get; set; }
-        public string CodigoItem { get; set; }
-        public string NombreItem { get; set; }
-        public string DescripcionItem { get; set; }
-        public DateTime FechaIngreso { get; set; }
-        public string UserIngreso { get; set; }
-        public int MontoSinIva { get; set; }
-        public int MontoConIva { get; set; }
-        public int Cantidad { get; set; }
+        public int NroLinDet { get; set; }
+        public CdgItem CdgItem { get; set; }
+        public string NmbItem { get; set; }
+        public string DscItem { get; set; }
+        public int QtyItem { get; set; }
+        public int PrcItem { get; set; }
+        public int MontoItem { get; set; }//precio unitario * cantidad
+
+
+        public int montoConIva { get; set; }
     }
 }

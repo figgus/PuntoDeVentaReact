@@ -25,21 +25,116 @@
 
     <script src="bootbox.js"></script>
     <title>Facturacion</title>
+
+
+    <script src="js/deflate.js"></script>
+    <script src="js/inflate.js"></script>
+    <script src="js/JSPrintManager.js"></script>
+    <script src="js/mime-types.js"></script>
+    <script src="js/z-worker.js"></script>
+    <script src="js/zip.js"></script>
+    <script src="js/zip-ext.js"></script>
+    <script src="js/zip-fs.js"></script>
+
+
+    <script type="text/javascript">
+        function Cargar() {
+            JSPM.JSPrintManager.auto_reconnect = true;
+            JSPM.JSPrintManager.start();
+            JSPM.JSPrintManager.WS.onStatusChanged = function () {
+                if (jspmWSStatus()) {
+                    //get client installed printers
+                    JSPM.JSPrintManager.getPrinters().then(function (myPrinters) {
+                        var options = '';
+                        for (var i = 0; i < myPrinters.length; i++) {
+                            options += '<option>' + myPrinters[i] + '</option>';
+                        }
+                        $('#installedPrinterName').html(options);
+                    });
+                }
+            };
+        }
+        //Check JSPM WebSocket status
+        function jspmWSStatus() {
+            if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+                return true;
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+                alert('JSPrintManager (JSPM) is not installed or not running! Download JSPM Client App from https://neodynamic.com/downloads/jspm');
+                return false;
+            }
+            else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.BlackListed) {
+                alert('JSPM has blacklisted this website!');
+                return false;
+            }
+        }
+
+        //Do printing...
+        function print(o) {
+            if (jspmWSStatus()) {
+                //Create a ClientPrintJob
+                var cpj = new JSPM.ClientPrintJob();
+                //Set Printer type (Refer to the help, there many of them!)
+                //if ($('#useDefaultPrinter').prop('checked')) {
+                //    cpj.clientPrinter = new JSPM.DefaultPrinter();
+                //} else {
+                //    cpj.clientPrinter = new JSPM.InstalledPrinter($('#installedPrinterName').val());
+                //}
+
+
+                //usa la impresora  por defecto
+                cpj.clientPrinter = new JSPM.InstalledPrinter($('#installedPrinterName').val());
+                //Set content to print...
+                //Create ESP/POS commands for sample label
+                var esc = '\x1B'; //ESC byte in hex notation
+                var newLine = '\x0A'; //LF byte in hex notation
+
+                var cmds = esc; //Initializes the printer (ESC )
+                cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+                cmds += 'BEST DEAL STORES'; //text to print
+                cmds += newLine + newLine;
+                cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+                cmds += 'COOKIES                   5.00';
+                cmds += newLine;
+                cmds += 'MILK 65 Fl oz             3.78';
+                cmds += newLine + newLine;
+                cmds += 'SUBTOTAL                  8.78';
+                cmds += newLine;
+                cmds += 'TAX 5%                    0.44';
+                cmds += newLine;
+                cmds += 'TOTAL                     9.22';
+                cmds += newLine;
+                cmds += 'CASH TEND                10.00';
+                cmds += newLine;
+                cmds += 'CASH DUE                  0.78';
+                cmds += newLine + newLine;
+                cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
+                cmds += '# ITEMS SOLD 2';
+                cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+                cmds += newLine + newLine;
+                cmds += '11/03/13  19:53:17';
+
+                cpj.printerCommands = cmds;
+                //Send print job to printer!
+                cpj.sendToClient();
+            }
+        }
+
+    </script>
 </head>
-  <body>
+<body>
     <noscript>
-      You need to enable JavaScript to run this app.
+        You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
     <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+          This HTML file is a template.
+          If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+          You can add webfonts, meta tags, or analytics to this file.
+          The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+          To begin the development, run `npm start` or `yarn start`.
+          To create a production bundle, use `npm run build` or `yarn build`.
+        -->
+</body>
 </html>

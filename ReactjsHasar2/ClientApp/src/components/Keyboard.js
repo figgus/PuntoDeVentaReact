@@ -1,9 +1,8 @@
 ﻿import React, { Component } from 'react';
-//import './EstiloBotones.css';
+
 import './EstilosKeyboard.css';
 import { Link } from 'react-router-dom';
-//import { Route } from 'react-router';
-//import { SeleccionPagoCompra } from './SeleccionPagoCompra';
+
 
 export class Keyboard extends Component {
     displayName = Keyboard.name
@@ -17,25 +16,36 @@ export class Keyboard extends Component {
             mostrarPago: false,
             saldo:0,
         }
+        
+    }
+
+    componentDidMount() {
+        
+
+        //var script = document.createElement('script');
+        //script.type = 'text/javascript';
+        //script.innerHTML = 'Cargar();print();';
+        //document.body.appendChild(script);
+        
     }
 
     
+    
 
-    GuardarVenta(montoVenta) {
-        this.setState({ enviado: true });
-        var producto = document.getElementById('producto').value;
-        fetch('http://localhost:61063/api/valores/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                Monto: montoVenta,
-                producto: producto,
-                
-            }),
-        })
-    }
+    //GuardarVenta(montoVenta) {
+    //    this.setState({ enviado: true });
+    //    var producto = document.getElementById('producto').value;
+    //    fetch('http://localhost:61063/api/valores/', {
+    //        method: 'POST',
+    //        headers: {
+    //            'Content-Type': 'application/json',
+    //        },
+    //        body: JSON.stringify({
+    //            Monto: montoVenta,
+    //            producto: producto,
+    //        }),
+    //    })
+    //}
 
     async VerificarExistencia() {
         var codigo = document.getElementById('codigo').value;
@@ -45,7 +55,6 @@ export class Keyboard extends Component {
             var existe = await fetch(url);
             var data = await existe.json();
 
-            //alert('el numero de resultados es ' + count);
             if (data != '') {
 
                 var productosActualizados = this.state.productos;
@@ -73,26 +82,9 @@ export class Keyboard extends Component {
 
     async RegistrarVentas() {
         var listaProd = this.state.productos;
-       
-        //console.log('los productos son:');
-        //console.log(listaProd);
-
-        //fetch('http://localhost:61063/api/libro_iva', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Content-Type': 'application/json',
-        //    },
-        //    body: JSON.stringify({
-        //        TotalOperacion: this.state.precioTotal,
-        //    })
-        //})
-
 
         const formaPago = this.state.formaPago[0].forma;
         listaProd.map(function (item, i) {
-            //console.log('el item es');
-            console.log(item);
-            console.log(formaPago);
             fetch('http://localhost:61063/api/Hist_plu', {
                 method: 'POST',
                 headers: {
@@ -106,11 +98,27 @@ export class Keyboard extends Component {
             })
             
         });
+        //this.EnviarFacturasApiSII();
         alert('Ventas guardadas con exito');
         this.setState({ productos: [], precioTotal: 0 });
         
-        
     }
+
+    EnviarFacturasApiSII() {//envia xml a la api de facturacion electronica de hasar
+        //console.log(JSON.stringify({ detalles: this.state.productos }));
+         fetch('http://localhost:61063/enviarDTE', {//dteController
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+             },
+             body: JSON.stringify( this.state.productos ),
+         })
+
+    };
+
+
+        
+    
 
     Redirigir(url) {
         //this.props.children.push('Menu');
@@ -164,7 +172,6 @@ export class Keyboard extends Component {
         return (
             <div>
                 <div id="encabezado">
-                   
                     <p> Operador 9999 -Administrador</p>
                     <p>Cliente: Consumidor final <button className="btn btn-secondary">Ver clientes</button> </p>
                     <p>Tipo documento
@@ -263,8 +270,6 @@ export class Keyboard extends Component {
 
                             </table>
 
-
-
                             <button onClick={() => { this.AgregarPago(1) }}>Efectivo</button>
                             <button onClick={() => { this.AgregarPago(1) }}>Otros pagos</button>
                             <button onClick={() => { this.AgregarPago(5) }}>Tarjeta credito</button>
@@ -273,10 +278,10 @@ export class Keyboard extends Component {
                             <button onClick={() => { this.AgregarPago(1) }}>Ticket</button>
                             <button onClick={() => { this.AgregarPago(9) }}>Cuenta corriente</button>
                         </div>
-                        
                     ): (<div></div>)
                 }
-                
+
+                <button onClick={() => { this.EnviarFacturasApiSII() }} className="btn btn-secondary">Enviar dte</button>
             </div>
         );
     }

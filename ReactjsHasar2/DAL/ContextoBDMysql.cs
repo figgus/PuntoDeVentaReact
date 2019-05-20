@@ -28,6 +28,11 @@ namespace ReactjsHasar2.DAL
 
         public DbSet<ReactjsHasar2.Models.Historico_rendicion> Historico_rendicion { get; set; }
 
+        public DbSet<ReactjsHasar2.Models.FoliosLocal> FoliosLocal { get; set; }
+
+        public DbSet<ReactjsHasar2.Models.Solicitud> Solicitud { get; set; }
+
         
     }
 }
+
