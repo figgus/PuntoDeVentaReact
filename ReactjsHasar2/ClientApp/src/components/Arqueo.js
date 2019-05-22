@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './Arqueo.css';
 
 export class Arqueo extends Component {
-    displayName = Arqueo.name
+    displayName = Arqueo.name;
 
     constructor(props) {
         super(props);

@@ -20,32 +20,21 @@ export class Keyboard extends Component {
     }
 
     componentDidMount() {
-        
 
-        //var script = document.createElement('script');
-        //script.type = 'text/javascript';
-        //script.innerHTML = 'Cargar();print();';
-        //document.body.appendChild(script);
+
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.innerHTML = 'Cargar();';
+        document.body.appendChild(script);
+
+
+      
+
+
         
     }
 
-    
-    
 
-    //GuardarVenta(montoVenta) {
-    //    this.setState({ enviado: true });
-    //    var producto = document.getElementById('producto').value;
-    //    fetch('http://localhost:61063/api/valores/', {
-    //        method: 'POST',
-    //        headers: {
-    //            'Content-Type': 'application/json',
-    //        },
-    //        body: JSON.stringify({
-    //            Monto: montoVenta,
-    //            producto: producto,
-    //        }),
-    //    })
-    //}
 
     async VerificarExistencia() {
         var codigo = document.getElementById('codigo').value;
@@ -83,7 +72,7 @@ export class Keyboard extends Component {
     async RegistrarVentas() {
         var listaProd = this.state.productos;
 
-        const formaPago = this.state.formaPago[0].forma;
+        const formaPago = this.state.formaPago[0].forma;//cambiar cuando se agregen medios de pagos
         listaProd.map(function (item, i) {
             fetch('http://localhost:61063/api/Hist_plu', {
                 method: 'POST',
@@ -98,7 +87,10 @@ export class Keyboard extends Component {
             })
             
         });
+        console.log(listaProd);
+        this.ImprimirBoleta(listaProd);
         //this.EnviarFacturasApiSII();
+        this.UsarFolio();
         alert('Ventas guardadas con exito');
         this.setState({ productos: [], precioTotal: 0 });
         
@@ -112,10 +104,33 @@ export class Keyboard extends Component {
                  'Content-Type': 'application/json',
              },
              body: JSON.stringify( this.state.productos ),
-         })
+        })
+
+        //this.UsarFolio();
+
 
     };
 
+    ImprimirBoleta(listaProd) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.innerHTML = 'print(' + JSON.stringify(listaProd) + ');';
+        document.body.appendChild(script);
+
+
+    }
+
+    UsarFolio() {
+        fetch('http://localhost:61063/api/FoliosLocals/UsarFolio', {//FoliosLocalsController
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+
+
+    }
 
         
     
@@ -282,6 +297,7 @@ export class Keyboard extends Component {
                 }
 
                 <button onClick={() => { this.EnviarFacturasApiSII() }} className="btn btn-secondary">Enviar dte</button>
+                
             </div>
         );
     }

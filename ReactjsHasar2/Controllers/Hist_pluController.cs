@@ -133,6 +133,15 @@ namespace ReactjsHasar2.Controllers
             return Ok(hist_plu);
         }
 
+
+        [Route("/hist_plu/OrderMedioPago")]
+        [HttpGet]
+        public ActionResult FiltroMedioPago()
+        {
+            var res = _context.Hist_plu.GroupBy(p=>p.MedioPago);
+            return Ok();
+        }
+
         private bool Hist_pluExists(int id)
         {
             return _context.Hist_plu.Any(e => e.ID == id);

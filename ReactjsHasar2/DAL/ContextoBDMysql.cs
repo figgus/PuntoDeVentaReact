@@ -32,6 +32,10 @@ namespace ReactjsHasar2.DAL
 
         public DbSet<ReactjsHasar2.Models.Solicitud> Solicitud { get; set; }
 
+        public DbSet<ReactjsHasar2.Models.MediosDePago> MediosDePago { get; set; }
+
+        public DbSet<ReactjsHasar2.Models.Ajustes> Ajustes { get; set; }
+
         
     }
 }

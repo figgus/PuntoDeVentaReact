@@ -20,6 +20,7 @@ export class TotalVendido extends Component {
         const response = await fetch(url);
         var data = await response.json();
         this.setState({ productosVendidos: data });
+        console.log(data);
         this.ListarCategorias();
     }
 
@@ -49,11 +50,9 @@ export class TotalVendido extends Component {
     }
 
     RemoverDuplicados(arreglo) {
-        //console.log(arreglo);
         for (var i = 0; i < arreglo.length; i++) {
             for (var a = 0; a < arreglo.length; a++) {
                 if (arreglo[i] == arreglo[a] && i!==a) {
-                    //console.log('se borrara ' + arreglo[a]);
                     arreglo.splice(a, 1);
                     a--;
                 }
@@ -111,7 +110,6 @@ export class TotalVendido extends Component {
         const url = "http://localhost:61063/api/Zetas/" + fechaSeleccionada;
         const response = await fetch(url);
         var data = await response.json();
-        console.log(data);
         this.setState({ productosVendidos: data });
         this.ListarCategoriasHistorico();
     }

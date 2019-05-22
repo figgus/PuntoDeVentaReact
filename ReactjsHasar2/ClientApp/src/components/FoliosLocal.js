@@ -112,7 +112,7 @@ export class FoliosLocal extends Component {
     }
 
     async TraerNumeroVentas() {
-        const url = "http://localhost:61063/getNumeroVentas";
+        const url = "http://localhost:61063/getNumeroVentas";//operacionesFoliosLocal
         const response = await fetch(url);
         const data = await response.json();
 

@@ -1,7 +1,4 @@
 ﻿import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 
 export class FinDia extends Component {
@@ -19,7 +16,7 @@ export class FinDia extends Component {
     }
 
     async TraerFoliosUsados() {
-        const url = "http://localhost:49929/getFoliosDia";
+        const url = "http://localhost:61063/getFoliosDia";
         const response = await fetch(url);
         const data = await response.json();
 
@@ -37,7 +34,7 @@ export class FinDia extends Component {
     }
 
     async TraerFolios() {
-        const url = "http://localhost:49929/getFoliosDia";
+        const url = "http://localhost:61063/getFoliosDia";
         const response = await fetch(url);
         const data = await response.json();
 

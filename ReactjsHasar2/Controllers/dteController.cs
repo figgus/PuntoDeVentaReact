@@ -33,10 +33,8 @@ namespace ReactjsHasar2.Controllers
                 i++;
                 lista.Add(PluToDetalle(venta,i));
             }
-            //lista.Add(new Detalle { NroLinDet=1,CdgItem=new Models.CdgItem {TpoCodigo="INT1" ,VlrCodigo="011"}, NmbItem="Parlantes multimedia",DscItem="",
-          //  QtyItem=20,PrcItem=4500,montoConIva=90000});
             EnvioDTE dte = new EnvioDTE();
-            var res = dte.EnvioDatosFacturacion(lista);
+            var res = dte.GetXMLFacturacion(lista);
             return Ok(res);
         }
 

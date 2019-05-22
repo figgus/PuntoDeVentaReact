@@ -116,6 +116,27 @@ namespace ReactjsHasar2.Controllers
             return Ok(foliosLocal);
         }
 
+        [Route("UsarFolio")]
+        [HttpPost]
+        public ActionResult UsarFolio()
+        {
+            int folioDisp = getFolioAsignable();
+            var FolioEditar = _context.FoliosLocal.FirstOrDefault(p=>p.numFolio==folioDisp);
+            FolioEditar.estaDisponible = 0;
+            FolioEditar.fechaAsignacion = DateTime.Now;
+            _context.SaveChanges();
+            return Ok(new {FolioUsado= folioDisp});
+        }
+
+        private int getFolioAsignable()
+        {
+            int res = 0;
+            res = _context.FoliosLocal.Where(p=>p.estaDisponible==1).Min(p=>p.numFolio);
+
+            return res;
+
+        }
+
         private bool FoliosLocalExists(int id)
         {
             return _context.FoliosLocal.Any(e => e.ID == id);

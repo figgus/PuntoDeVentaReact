@@ -30,14 +30,15 @@
     <script src="js/deflate.js"></script>
     <script src="js/inflate.js"></script>
     <script src="js/JSPrintManager.js"></script>
-    <script src="js/mime-types.js"></script>
+
     <script src="js/z-worker.js"></script>
     <script src="js/zip.js"></script>
     <script src="js/zip-ext.js"></script>
     <script src="js/zip-fs.js"></script>
-
+    <script src="js/mime-types.js"></script>
 
     <script type="text/javascript">
+        var impresoraDefault;
         function Cargar() {
             JSPM.JSPrintManager.auto_reconnect = true;
             JSPM.JSPrintManager.start();
@@ -50,6 +51,7 @@
                             options += '<option>' + myPrinters[i] + '</option>';
                         }
                         $('#installedPrinterName').html(options);
+                        impresoraDefault = myPrinters[0];
                     });
                 }
             };
@@ -69,20 +71,14 @@
         }
 
         //Do printing...
-        function print(o) {
+        function print(listaVentas) {
             if (jspmWSStatus()) {
                 //Create a ClientPrintJob
                 var cpj = new JSPM.ClientPrintJob();
-                //Set Printer type (Refer to the help, there many of them!)
-                //if ($('#useDefaultPrinter').prop('checked')) {
-                //    cpj.clientPrinter = new JSPM.DefaultPrinter();
-                //} else {
-                //    cpj.clientPrinter = new JSPM.InstalledPrinter($('#installedPrinterName').val());
-                //}
-
-
+                
                 //usa la impresora  por defecto
-                cpj.clientPrinter = new JSPM.InstalledPrinter($('#installedPrinterName').val());
+                cpj.clientPrinter = new JSPM.InstalledPrinter(impresoraDefault);
+
                 //Set content to print...
                 //Create ESP/POS commands for sample label
                 var esc = '\x1B'; //ESC byte in hex notation
@@ -90,32 +86,33 @@
 
                 var cmds = esc; //Initializes the printer (ESC )
                 cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
-                cmds += 'BEST DEAL STORES'; //text to print
-                cmds += newLine + newLine;
-                cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
-                cmds += 'COOKIES                   5.00';
-                cmds += newLine;
-                cmds += 'MILK 65 Fl oz             3.78';
-                cmds += newLine + newLine;
-                cmds += 'SUBTOTAL                  8.78';
-                cmds += newLine;
-                cmds += 'TAX 5%                    0.44';
-                cmds += newLine;
-                cmds += 'TOTAL                     9.22';
-                cmds += newLine;
-                cmds += 'CASH TEND                10.00';
-                cmds += newLine;
-                cmds += 'CASH DUE                  0.78';
+                cmds += 'Boleta Hasar'; //text to print
+
+                var cont = 0;
+                listaVentas.forEach(function (currentValue, index, array) {
+                    cmds += newLine;
+                    cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+                    cmds += currentValue.descripcion + '                   ' + currentValue.costo;
+                    cmds += newLine;
+                    cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+                    cmds += newLine;
+                    cont = cont + currentValue.costo;
+                });
+
+                
                 cmds += newLine + newLine;
                 cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
-                cmds += '# ITEMS SOLD 2';
+                cmds += 'Total: ' + cont;
                 cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
                 cmds += newLine + newLine;
-                cmds += '11/03/13  19:53:17';
+                cmds += new Date().toLocaleString();
 
                 cpj.printerCommands = cmds;
                 //Send print job to printer!
                 cpj.sendToClient();
+            }
+            else {
+                alert('no entro');
             }
         }
 
