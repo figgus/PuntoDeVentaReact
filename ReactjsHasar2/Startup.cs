@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReactjsHasar2.Services;
 
 namespace ReactjsHasar2
 {
@@ -20,7 +21,7 @@ namespace ReactjsHasar2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddTransient<IOperacionesFoliosLocales, OperacionesFoliosLocalesService>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

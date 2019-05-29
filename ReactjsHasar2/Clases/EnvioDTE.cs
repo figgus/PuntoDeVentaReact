@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ReactjsHasar2.DAL;
 using ReactjsHasar2.Models.ModelsDTE;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace ReactjsHasar2.Clases
 {
     public class EnvioDTE
     {
-
+        private readonly ContextoBDMysql _context = new ContextoBDMysql();
         public string GetXMLFacturacion(List<Detalle> listaDetalles)
         {
             XElement parent = new XElement("datos");
@@ -61,6 +62,20 @@ namespace ReactjsHasar2.Clases
             
 
             return response.RequestMessage.ToString();
+        }
+
+        public async Task<bool> EnviarDetalles(List<Detalle> detalles,int numFolio,int tipoDocumento)
+        {
+            var ajustes = _context.Ajustes.FirstOrDefault();
+            string res = string.Empty;
+            string urlAPI = "http://localhost:59017/enviarDTE";
+            var json = JsonConvert.SerializeObject(new { detalles=detalles,numFolio=numFolio,numSucursal=ajustes.numSucursal,numCaja=ajustes.numeroCaja, tipoDocumento =tipoDocumento});
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpClient client = new HttpClient();
+            var response = await client.PostAsync(urlAPI, content);
+
+
+            return response.IsSuccessStatusCode;
         }
 
     }

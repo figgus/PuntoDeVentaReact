@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ReactjsHasar2.DAL;
 
 namespace ReactjsHasar2.Controllers
 {
+    [Route("/OperacionesFoliosLocales/")]
     [ApiController]
     public class OperacionesFoliosLocalesController : ControllerBase
     {
@@ -45,24 +47,24 @@ namespace ReactjsHasar2.Controllers
             return Ok(new { ultimoAsignado = ultimoFolioAsignado.numFolio });
         }
 
-        [Route("vender")]
-        [HttpPost]
-        public ActionResult vender()
-        {
-            bool disponible = _context.FoliosLocal.Count(p => p.estaDisponible == 1) > 0;
-            if (disponible)
-            {
+        //[Route("vender")]
+        //[HttpPost]
+        //public ActionResult vender()
+        //{
+        //    bool disponible = _context.FoliosLocal.Count(p => p.estaDisponible == 1) > 0;
+        //    if (disponible)
+        //    {
 
 
-                int folioVenta = FoliominimoDisponible();
-                var folioEditar = _context.FoliosLocal.FirstOrDefault(p => p.ID == folioVenta);
-                folioEditar.estaDisponible = 0;
-                folioEditar.fechaVenta = DateTime.Now;
-                _context.SaveChangesAsync();
-                return Ok();
-            }
-            return NotFound();
-        }
+        //        int folioVenta = FoliominimoDisponible();
+        //        var folioEditar = _context.FoliosLocal.FirstOrDefault(p => p.ID == folioVenta);
+        //        folioEditar.estaDisponible = 0;
+        //        folioEditar.fechaVenta = DateTime.Now;
+        //        _context.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    return NotFound();
+        //}
 
         [Route("getNumeroVentas")]
         [HttpGet]
@@ -97,6 +99,39 @@ namespace ReactjsHasar2.Controllers
         {
             int res = _context.FoliosLocal.Where(p => p.estaDisponible == 1).Min(p => p.ID);
             return res;
+        }
+
+        [Route("UsarFolio")]
+        [HttpPost]
+        public ActionResult UsarFolio()
+        {
+            bool folioDisponible = _context.FoliosLocal.Count(p => p.estaDisponible == 1) > 0;
+            if (!folioDisponible)
+            {
+                return BadRequest(new { mensaje = "No hay folios disponibles" });
+            }
+            int folioDisp = getFolioAsignable();
+            var FolioEditar = _context.FoliosLocal.FirstOrDefault(p => p.numFolio == folioDisp);
+            FolioEditar.estaDisponible = 0;
+            FolioEditar.fechaAsignacion = DateTime.Now;
+            _context.SaveChanges();
+            return Ok(new { FolioUsado = folioDisp });
+        }
+
+        private int getFolioAsignable()
+        {
+            int res = 0;
+            res = _context.FoliosLocal.Where(p => p.estaDisponible == 1).Min(p => p.numFolio);
+
+            return res;
+
+        }
+
+
+        public void LeerXML()
+        {
+            string xml = "";
+            var json = JsonConvert.DeserializeXmlNode(xml);
         }
 
     }

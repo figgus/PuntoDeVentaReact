@@ -1,7 +1,5 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { stat } from 'fs';
-//import { stat } from 'fs';
 
 export class AdministradorFolios extends Component {
     displayName = AdministradorFolios.name
@@ -16,7 +14,6 @@ export class AdministradorFolios extends Component {
             rangoTotalesMax: 0,
             rangoDispMin: 0,
             rangoDispMax: 0,
-
             mensaje:'',
 
         }
@@ -39,11 +36,11 @@ export class AdministradorFolios extends Component {
 
     async TraerTotales() {
         try {
-            const url = "http://localhost:49929/api/FoliosP";
+            const url = "http://localhost:59017/OperacionesFolios/getTotal";
             const response = await fetch(url);
             const data = await response.json();
 
-            this.setState({ totales: data.length });
+            this.setState({ totales: data.numeroFolios });
         } catch (err) {
             this.setState({ mensaje: 'El servicio de administracion de folios no esta disponible' });
         }
@@ -51,7 +48,7 @@ export class AdministradorFolios extends Component {
 
     async TraerRestantes() {
         try {
-            const url = "http://localhost:49929/getFoliosDisponibles";
+            const url = "http://localhost:59017/OperacionesFolios/getFoliosDisponibles";
             const response = await fetch(url);
             const data = await response.json();
             this.setState({ restantes: data.foliosDisponibles });
@@ -62,11 +59,10 @@ export class AdministradorFolios extends Component {
 
     async TraerRangoTotalMin() {
         try {
-            const url = "http://localhost:49929/getFolioMin";
+            const url = "http://localhost:59017/OperacionesFolios/getFolioMin";
             const response = await fetch(url);
             const data = await response.json();
             this.setState({ rangoTotalesMin: data.primerFolio });
-            //console.log(data.primerFolio);
         } catch (err) {
             this.setState({ mensaje: 'El servicio de administracion de folios no esta disponible' });
         }
@@ -74,11 +70,10 @@ export class AdministradorFolios extends Component {
 
     async TraerRangoTotalMax() {
         try {
-            const url = "http://localhost:49929/getFolioMax";
+            const url = "http://localhost:59017/OperacionesFolios/getFolioMax";
             const response = await fetch(url);
             const data = await response.json();
             this.setState({ rangoTotalesMax: data.ultimoFolio });
-            //console.log(data.ultimoFolio);
         } catch (err) {
             this.setState({ mensaje: 'El servicio de administracion de folios no esta disponible' });
         }
@@ -87,7 +82,7 @@ export class AdministradorFolios extends Component {
 
     async TraerRangoDisponibleMax() {
         try {
-            const url = "http://localhost:49929/getMaxDisp";
+            const url = "http://localhost:59017/OperacionesFolios/getMaxDisp";
             const response = await fetch(url);
             const data = await response.json();
             this.setState({ rangoDispMax: data.maxFolioDisp });
@@ -98,7 +93,7 @@ export class AdministradorFolios extends Component {
 
     async TraerRangoDisponibleMin() {
         try {
-            const url = "http://localhost:49929/getMinDisp";
+            const url = "http://localhost:59017/OperacionesFolios/getMinDisp";
             const response = await fetch(url);
             const data = await response.json();
             this.setState({ rangoDispMin: data.minFolioDisp });
@@ -112,13 +107,7 @@ export class AdministradorFolios extends Component {
         'font-weight':'500'
     }
 
-    //async TraerFolios() {
-    //    const url = "http://localhost:49929/api/FoliosLocals";
-    //    const response = await fetch(url);
-    //    const data = await response.json();
-    //    console.log(data);
-    //    this.setState({ folios: data });
-    //}
+   
 
     render() {
         return (

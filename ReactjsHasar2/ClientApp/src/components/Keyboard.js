@@ -20,36 +20,23 @@ export class Keyboard extends Component {
     }
 
     componentDidMount() {
-
-
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.innerHTML = 'Cargar();';
         document.body.appendChild(script);
-
-
-      
-
-
-        
     }
 
 
 
     async VerificarExistencia() {
         var codigo = document.getElementById('codigo').value;
-        if (codigo != '') {
-            const url = 'http://localhost:61063/api/plu/' + codigo;
-            console.log(url);
-            var existe = await fetch(url);
-            var data = await existe.json();
-
-            if (data != '') {
-
+        if (codigo != '' || codigo>0) {
+            try {
+                const url = 'http://localhost:61063/api/plu/' + codigo;
+                var existe = await fetch(url);
+                var data = await existe.json();
                 var productosActualizados = this.state.productos;
                 var total = this.state.precioTotal;
-                console.log('el primer total es ' + total);
-                console.log('y se le suma ' + data['costo']);
                 total = total + Number(data['costo']);
 
                 productosActualizados.push(data);
@@ -57,9 +44,7 @@ export class Keyboard extends Component {
 
                 this.setState({ productos: productosActualizados, precioTotal: total, saldo: total });
                 document.getElementById('codigo').value = '';
-
-            }
-            else {
+            } catch (err) {
                 alert('elemento no existe');
             }
         }
@@ -87,49 +72,43 @@ export class Keyboard extends Component {
             })
             
         });
-        console.log(listaProd);
+        
         this.ImprimirBoleta(listaProd);
         //this.EnviarFacturasApiSII();
-        this.UsarFolio();
+        this.UsarFolioEnvioSii();
         alert('Ventas guardadas con exito');
-        this.setState({ productos: [], precioTotal: 0 });
-        
     }
 
-    EnviarFacturasApiSII() {//envia xml a la api de facturacion electronica de hasar
-        //console.log(JSON.stringify({ detalles: this.state.productos }));
-         fetch('http://localhost:61063/enviarDTE', {//dteController
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-             body: JSON.stringify( this.state.productos ),
-        })
-
-        //this.UsarFolio();
-
-
-    };
-
-    ImprimirBoleta(listaProd) {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.innerHTML = 'print(' + JSON.stringify(listaProd) + ');';
-        document.body.appendChild(script);
-
-
-    }
-
-    UsarFolio() {
-        fetch('http://localhost:61063/api/FoliosLocals/UsarFolio', {//FoliosLocalsController
+    EnviarFacturasApiSII(numFolio) {//envia xml a la api de facturacion electronica de hasar
+        const tipoDte = document.getElementById('tipoDocumento').value;
+        fetch('http://localhost:61063/enviarDTE', {//dteController
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({ detalles: this.state.productos, numFolio: numFolio, tipoDocumento: tipoDte }),
+        }).then(() => this.setState({ productos: [], precioTotal: 0 }));
+    };
+
+    ImprimirBoleta(listaProd) {//recibe una lista de objectos tipo plu(producto)
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.innerHTML = 'print(' + JSON.stringify(listaProd) + ');';
+        document.body.appendChild(script);
+    }
+
+    async UsarFolioEnvioSii() {
+       
+        const response = await fetch('http://localhost:61063/OperacionesFoliosLocales/UsarFolio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
-
-
+        const data = await response.json();
+        var numFolio = data.folioUsado;
+        this.EnviarFacturasApiSII(numFolio);
+        this.GuardarNuevaVenta(numFolio);
     }
 
         
@@ -166,7 +145,7 @@ export class Keyboard extends Component {
         }
         else {
             var saldo = this.state.saldo - pago.value;
-           // total.value = Number(total.value) - Number(pago.value);
+
             document.getElementById('saldo').value = (total.value - pago.value);
             pagos.push({ forma: idMedioPago, valor: pago.value });
             document.getElementById('pagar').value = '';
@@ -183,6 +162,40 @@ export class Keyboard extends Component {
 
     }
 
+    GuardarNuevaVenta(numFolio) {//inserta en la tabla hist_fn
+        console.log(this.state.productos);
+        const prods = this.state.productos;
+        const medioPago = this.state.formaPago;
+
+        console.log('el medio de pago es ');
+        console.log(medioPago);
+
+        prods.forEach(function (currentValue, index, array) {
+            console.log(JSON.stringify({
+                CodPLU: currentValue.codigoPLU,
+                Cantidad: 1,
+                Monto: currentValue.costo,
+                CategoriaFk: currentValue.codigoSeccion,
+                numeroFolio: numFolio,
+                MedioPagoFk: [medioPago]
+            }));
+            fetch('http://localhost:61063/api/Hist_fn', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                        CodPLU: currentValue.codigoPLU,
+                        Cantidad: 1,
+                        Monto: currentValue.costo,
+                        CategoriaFk: currentValue.codigoSeccion,
+                        numeroFolio: numFolio,
+                        MedioPagoFk: [medioPago]
+                })
+            });
+        });
+    }
+
     render() {
         return (
             <div>
@@ -190,13 +203,14 @@ export class Keyboard extends Component {
                     <p> Operador 9999 -Administrador</p>
                     <p>Cliente: Consumidor final <button className="btn btn-secondary">Ver clientes</button> </p>
                     <p>Tipo documento
-                        <select>
-                            <option>Boleta fiscal</option>
+                        <select id="tipoDocumento">
+                            <option value="33">Boleta electronica</option>
+                            <option value="39">Factura</option>
                         </select>
                     </p>
                 </div>
                 <div id="cuerpo">
-                    <p> Ingrese codigo del producto  <input type="text" className="" placeholder="codigo" name="codigo" id="codigo" />
+                    <p> Ingrese codigo del producto  <input type="number" className="" placeholder="codigo" name="codigo" id="codigo" />
                         <button className="btn btn-success" onClick={() => this.VerificarExistencia()}>Agregar</button>
                     </p>
                     <div></div>
@@ -295,8 +309,7 @@ export class Keyboard extends Component {
                         </div>
                     ): (<div></div>)
                 }
-
-                <button onClick={() => { this.EnviarFacturasApiSII() }} className="btn btn-secondary">Enviar dte</button>
+                
                 
             </div>
         );

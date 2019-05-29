@@ -33,42 +33,46 @@ export class FoliosLocal extends Component {
         }
         else
         {
-            const url = 'http://localhost:49929/solicitudFolios?cant=' + cantidad + '&idSucursal=1';
-            console.log(url);
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-
-            })
-            //console.log(response);
-            var data = await response.json();
-            console.log(data);
-            var min = 0;
-            var max = 0;
-            data.forEach(function (currentValue, index, array) {
-                if (currentValue.numFolio > max) {
-                    max = currentValue.numFolio;
-                }
-
-                const response = fetch('http://localhost:61063/api/FoliosLocals', {
+            try {
+                const url = 'http://localhost:59017/OperacionesFolios/solicitudFolios?cant=' + cantidad + '&idSucursal=1';
+                console.log(url);
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        numFolio: currentValue.numFolio,
-                        descripcion: currentValue.descripcion,
-                        estaDisponible: 1,
 
-                    })
+                })
+                //console.log(response);
+                var data = await response.json();
+                console.log(data);
+                var min = 0;
+                var max = 0;
+                data.forEach(function (currentValue, index, array) {
+                    if (currentValue.numFolio > max) {
+                        max = currentValue.numFolio;
+                    }
+
+                    const response = fetch('http://localhost:61063/api/FoliosLocals', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            numFolio: currentValue.numFolio,
+                            descripcion: currentValue.descripcion,
+                            estaDisponible: 1,
+
+                        })
+                    });
                 });
-            });
-            min = max - cantidad;
-            console.log(max);
-            console.log(min);
-            this.RegistrarSolicitudFolios(cantidad, min, max);
+                min = max - cantidad;
+                console.log(max);
+                console.log(min);
+                this.RegistrarSolicitudFolios(cantidad, min, max);
+            } catch (err) {
+                alert('Solicito mas de la cantidad disponible de folios');
+            }
         }
     }
 
@@ -88,7 +92,7 @@ export class FoliosLocal extends Component {
 
 
     async TraerUltTicket() {
-        const url = "http://localhost:61063/getUltimoAsignado";
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getUltimoAsignado";
         const response = await fetch(url);
         const data = await response.json();
 
@@ -96,7 +100,7 @@ export class FoliosLocal extends Component {
     }
 
     async TraerRestantes() {
-        const url = "http://localhost:61063/getRestantes";
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getRestantes";
         const response = await fetch(url);
         const data = await response.json();
 
@@ -104,7 +108,7 @@ export class FoliosLocal extends Component {
     }
 
     async foliosTotal() {
-        const url = "http://localhost:61063/getTotales";
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getTotales";
         const response = await fetch(url);
         const data = await response.json();
 
@@ -112,7 +116,7 @@ export class FoliosLocal extends Component {
     }
 
     async TraerNumeroVentas() {
-        const url = "http://localhost:61063/getNumeroVentas";//operacionesFoliosLocal
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getNumeroVentas";//operacionesFoliosLocal
         const response = await fetch(url);
         const data = await response.json();
 
@@ -164,6 +168,7 @@ export class FoliosLocal extends Component {
                 <div>
                     <p> Solicitar folios </p>
                     <p> Cantidad  <input id="cantidad" type="number" /> <button onClick={() => { this.SolicitarFolios() }}>Solicitar</button> </p>
+                    <p> Subir xml <input type="file" id="archivo" /> </p>
                 </div>
 
                 <div>

@@ -120,6 +120,11 @@ namespace ReactjsHasar2.Controllers
         [HttpPost]
         public ActionResult UsarFolio()
         {
+            bool folioDisponible = _context.FoliosLocal.Count(p=>p.estaDisponible==1)>0;
+            if (!folioDisponible)
+            {
+                return BadRequest(new { mensaje="No hay folios disponibles"});
+            }
             int folioDisp = getFolioAsignable();
             var FolioEditar = _context.FoliosLocal.FirstOrDefault(p=>p.numFolio==folioDisp);
             FolioEditar.estaDisponible = 0;

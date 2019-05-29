@@ -13,6 +13,7 @@ import { Articulos } from './components/Articulos';
 import { AdministradorFolios } from './components/AdministradorFolios';
 import { FoliosLocal } from './components/FoliosLocal';
 import { Ajustes } from './components/Ajustes';
+import { Reimpresion } from './components/Reimpresion';
 
 
 export default class App extends Component {
@@ -33,6 +34,7 @@ export default class App extends Component {
               <Route path="/AdministradorFolios" component={AdministradorFolios} />
               <Route path="/FoliosLocal" component={FoliosLocal} />
               <Route path="/ajustes" component={Ajustes} />
+              <Route path="/reimpresion" component={Reimpresion} />
           </div>
     );
   }

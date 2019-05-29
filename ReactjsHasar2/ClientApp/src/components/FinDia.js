@@ -16,7 +16,7 @@ export class FinDia extends Component {
     }
 
     async TraerFoliosUsados() {
-        const url = "http://localhost:61063/getFoliosDia";
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getFoliosDia";
         const response = await fetch(url);
         const data = await response.json();
 
@@ -34,7 +34,7 @@ export class FinDia extends Component {
     }
 
     async TraerFolios() {
-        const url = "http://localhost:61063/getFoliosDia";
+        const url = "http://localhost:61063/OperacionesFoliosLocales/getFoliosDia";
         const response = await fetch(url);
         const data = await response.json();
 

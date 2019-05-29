@@ -18,13 +18,13 @@ namespace ReactjsHasar2.Controllers
 
         [Route("/enviarDTE")]
         [HttpPost]
-        public ActionResult EnviarDTE([FromBody]List<Hist_plu> detalles)
+        public async void EnviarDTE([FromBody]EnvioDTEpara datos)
         {
-            foreach (Hist_plu venta in detalles)
+            foreach (Hist_plu venta in datos.detalles)
             {
-                venta.Cantidad = detalles.Count(p=>p.CodigoPLU==venta.CodigoPLU);
+                venta.Cantidad = datos.detalles.Count(p=>p.CodigoPLU==venta.CodigoPLU);
             }
-            var ventas = detalles.GroupBy(p => p.CodigoPLU).Select(y=>y.First());
+            var ventas = datos.detalles.GroupBy(p => p.CodigoPLU).Select(y=>y.First());
 
             var lista = new List<Detalle>();
             int i = 0;
@@ -34,10 +34,10 @@ namespace ReactjsHasar2.Controllers
                 lista.Add(PluToDetalle(venta,i));
             }
             EnvioDTE dte = new EnvioDTE();
-            var res = dte.GetXMLFacturacion(lista);
-            return Ok(res);
+            await dte.EnviarDetalles(lista,datos.numFolio,datos.tipoDocumento);
         }
 
+        
 
         private Detalle PluToDetalle(Hist_plu plu,int numLinea)
         {

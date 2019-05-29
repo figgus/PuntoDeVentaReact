@@ -133,6 +133,8 @@ namespace ReactjsHasar2.Controllers
             return Ok(hist_fn);
         }
 
+        
+
         private bool Hist_fnExists(int id)
         {
             return _context.Hist_fn.Any(e => e.ID == id);

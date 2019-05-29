@@ -90,6 +90,9 @@ export class MenuPrincipal extends Component {
                 <LinkContainer to={'/FoliosLocal'} exact>
                     <button > Folios Locales </button>
                 </LinkContainer>
+                <LinkContainer to={'/reimpresion'} exact>
+                    <button > Reimpresion de facturas </button>
+                </LinkContainer>
                 <LinkContainer to={'/ajustes'} exact>
                     <button > Ajustes </button>
                 </LinkContainer>
