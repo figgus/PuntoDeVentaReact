@@ -23,7 +23,7 @@ namespace ReactjsHasar2.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySQL("Server=localhost;Database=puntodeventa;Uid=joaquin;Pwd=1234;Convert Zero Datetime=True");
+            optionsBuilder.UseMySQL("Server=192.168.100.59;Database=puntodeventa;Uid=hasar;Pwd=1234;Convert Zero Datetime=True");
         }
 
         public DbSet<ReactjsHasar2.Models.Historico_rendicion> Historico_rendicion { get; set; }
@@ -36,7 +36,9 @@ namespace ReactjsHasar2.DAL
 
         public DbSet<ReactjsHasar2.Models.Ajustes> Ajustes { get; set; }
 
-        
+        public DbSet<ReactjsHasar2.Models.RelacionPagosProducto> RelacionPagosProducto { get; set; }
+
+
     }
 }
 

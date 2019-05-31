@@ -16,6 +16,7 @@ export class AdministradorFolios extends Component {
             rangoDispMax: 0,
             mensaje:'',
 
+            ingresarNuevoSet: false,
         }
 
         this.TraerDatos();
@@ -102,16 +103,33 @@ export class AdministradorFolios extends Component {
         }
     }
 
+    //InsertarFoliosSII() {
+    //    fetch('http://localhost:61063/api/RelacionPagosProductos', {
+    //        method: 'POST',
+    //        headers: {
+    //            'Content-Type': 'application/json',
+    //        },
+    //        body: JSON.stringify({
+    //            NumFolio: numFolio,
+    //            IdMedioPago: currentValue.forma,
+    //            Monto: currentValue.valor
+    //        })
+    //    });
+    //}
+
     EstiloAlerta = {
         'color': 'red',
         'font-weight':'500'
     }
-
+    EstiloGeneral = {
+        'border': '1px solid black',
+        'padding': '30px'
+    }
    
 
     render() {
         return (
-            <div>
+            <div style={this.EstiloGeneral}>
                 <h1> Panel de administracion del SAF</h1>
                 <p style={this.EstiloAlerta}> {this.state.mensaje} </p>
                 <p>Folios totales {this.state.totales}</p>
@@ -121,7 +139,15 @@ export class AdministradorFolios extends Component {
                 <p>Rango de Folios disponibles: desde el {this.state.rangoDispMin} hasta {this.state.rangoDispMax}</p>
 
                 <div>
-                    Ingresar nuevo set de folios
+                    {
+                        this.state.ingresarNuevoSet ? (<div style={this.EstiloGeneral}>
+                            <p> Ingrese el primero folio que se le asigno <input id="nuevoPrimer" type="number" /> </p>
+                            <p> Ingrese el ultimo folio que se le asigno <input id="nuevoUltimo" type="number" /></p>
+                            <p> Ingrese clave privada del xml de solicitacion de folios <input id="txtclavePrivada" type="text" /> </p>
+                            <p> <button className="btn btn-success"> Ingresar </button>  <button className="btn btn-danger" onClick={() => { this.setState({ ingresarNuevoSet: false }) }}> Cerrar </button> </p>
+                        </div>) : (<p> <button onClick={() => { this.setState({ ingresarNuevoSet: true }) }}> Ingresar nuevo set de folios</button> </p>)
+                    }
+                    
                 </div>
                 <Link to="/menu"> <button className="btn btn-secondary">Cerrar</button></Link>
             </div>

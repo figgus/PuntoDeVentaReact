@@ -26,7 +26,7 @@ namespace ReactjsHasar2.Models
         public int CodigoTurno { get; set; }
         public string FechaUltAct { get; set; }
 
-        public int? MedioPagoFk { get; set; }
+        
         public int? CategoriaFk { get; set; }
         public int? numeroFolio { get; set; }
     }

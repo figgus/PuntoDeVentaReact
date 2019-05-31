@@ -165,20 +165,11 @@ export class Keyboard extends Component {
     GuardarNuevaVenta(numFolio) {//inserta en la tabla hist_fn
         console.log(this.state.productos);
         const prods = this.state.productos;
-        const medioPago = this.state.formaPago;
 
-        console.log('el medio de pago es ');
-        console.log(medioPago);
+        
 
         prods.forEach(function (currentValue, index, array) {
-            console.log(JSON.stringify({
-                CodPLU: currentValue.codigoPLU,
-                Cantidad: 1,
-                Monto: currentValue.costo,
-                CategoriaFk: currentValue.codigoSeccion,
-                numeroFolio: numFolio,
-                MedioPagoFk: [medioPago]
-            }));
+            
             fetch('http://localhost:61063/api/Hist_fn', {
                 method: 'POST',
                 headers: {
@@ -190,10 +181,39 @@ export class Keyboard extends Component {
                         Monto: currentValue.costo,
                         CategoriaFk: currentValue.codigoSeccion,
                         numeroFolio: numFolio,
-                        MedioPagoFk: [medioPago]
                 })
             });
         });
+        this.GuardarMediosDePagoVenta(numFolio);
+    }
+
+    GuardarMediosDePagoVenta(numFolio) {//guarda todos los medios de pagos usados para la venta
+        const mediosPago = this.state.formaPago;
+        mediosPago.forEach(function (currentValue, index, array) {
+            fetch('http://localhost:61063/api/RelacionPagosProductos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    NumFolio: numFolio,
+                    IdMedioPago: currentValue.forma,
+                    Monto: currentValue.valor
+                })
+            });
+        });
+    }
+
+    async GetMedioPagoById(idMedioPago) {
+        const url = "http://localhost:61063/api/MediosDePagoes/" + idMedioPago;
+        const response = await fetch(url);
+        const data = await response.json();
+        return await data.descripcion;
+    }
+
+    ClickGetTotal() {
+        const saldo = this.state.saldo;
+        document.getElementById('pagar').value = saldo;
     }
 
     render() {
@@ -242,8 +262,9 @@ export class Keyboard extends Component {
                 </div>
                 <center>
                     <p id="btnPagar">Precio total {this.state.precioTotal}  </p>
+                    {this.state.precioTotal > 0 ? (<button id="btnPagar" className="btn btn-success"  onClick={() => this.setState({ mostrarPago: true })}>Pagar</button>)
+                        : (<button disabled id="btnPagar" className="btn btn-success" onClick={() => this.setState({ mostrarPago: true })}>Pagar</button>)}
 
-                    <button id="btnPagar" className="btn btn-success" onClick={() => this.setState({ mostrarPago:true })}>Pagar</button>
                 </center>
                 <Link to="/menu"><button className="btn btn-secondary">Cerrar</button></Link>
                 {
@@ -268,7 +289,7 @@ export class Keyboard extends Component {
                                     </tr>
                                     <tr>
                                         <td style={this.padding}>A pagar</td>
-                                        <td style={this.padding}> <input id="pagar" type="number" /> </td>
+                                        <td style={this.padding}> <input onDoubleClick={() => { this.ClickGetTotal() }} id="pagar" type="number" /> </td>
                                         <td style={this.padding}> <button value="asd" > Descuentos total</button> </td>
                                     </tr>
                                     <tr>
@@ -284,19 +305,14 @@ export class Keyboard extends Component {
                                     <th style={this.estiloTabla}> Valor </th>
                                 </thead>
                                 {
-                                    this.state.formaPago.map(function (item, i) {
+                                    this.state.formaPago.map( (item, i)=> {
                                         return <tr key={i}>
-                                            <td  sty>{item.forma} </td>
-                                            <td >{item.valor} </td>
+                                            <td style={this.estiloTabla} >{String(this.GetMedioPagoById(item.forma))} </td>
+                                            <td style={this.estiloTabla}>{item.valor} </td>
 
                                         </tr>
                                     })
                                 }
-                                <tr>
-                                    <td style={this.estiloTabla}></td>
-                                    <td style={this.estiloTabla}></td>
-                                </tr>
-
                             </table>
 
                             <button onClick={() => { this.AgregarPago(1) }}>Efectivo</button>

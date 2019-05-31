@@ -16,9 +16,9 @@ namespace ReactjsHasar2.Controllers
     {
         private readonly ContextoBDMysql _context;
 
-        public MediosDePagoesController(ContextoBDMysql context)
+        public MediosDePagoesController()
         {
-            _context = context;
+            _context = new ContextoBDMysql();
         }
 
         // GET: api/MediosDePagoes
