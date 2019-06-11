@@ -16,14 +16,17 @@ export class FoliosLocal extends Component {
 
             desde: 0,
             hasta: 0,
-            //folios:[],
+            cargando: true,
         };
-        this.TraerUltTicket();
-        this.TraerRestantes();
-        this.foliosTotal();
-        this.TraerNumeroVentas();
-        //this.TraerFolios();
-        this.TraerRangos();
+        this.TraerDatos().then(() => { this.setState({ cargando: false }) });
+    }
+
+    async TraerDatos() {
+        await this.TraerUltTicket();
+        await this.TraerRestantes();
+        await this.foliosTotal();
+        await this.TraerNumeroVentas();
+        await this.TraerRangos();
     }
 
     async SolicitarFolios() {
@@ -170,34 +173,42 @@ export class FoliosLocal extends Component {
                     <p> Cantidad  <input id="cantidad" type="number" /> <button onClick={() => { this.SolicitarFolios() }}>Solicitar</button> </p>
                     <p> Subir xml <input type="file" id="archivo" /> </p>
                 </div>
+                {
+                    this.state.cargando ?
+                        (<div>
+                            <img height="50" width="50" src={require('./Imagenes/Cargando.gif')} />
+                        </div>)
+                        : (<div>
+                            <p>Ultimo folio asignado {this.state.ultimoAsignado}</p>
+                            <p>Cantidad de tickets restantes {this.state.restantes} </p>
+                            <p>Total de folios solicitados {this.state.total} </p>
+                            <p>Numero de folios vendidos {this.state.numVentas}</p>
+                            <p> Rangos de folios </p>
+                            <table className="tablaNormal">
+                                <thead>
+                                    <th className="tablaNormal">N°</th>
+                                    <th className="tablaNormal">Primer folio</th>
+                                    <th className="tablaNormal"> Ultimo folio </th>
+                                    <th className="tablaNormal"> Cantidad </th>
+                                    <th className="tablaNormal"> Fecha de solicitud</th>
+                                </thead>
 
+                                {
+                                    this.state.rangosIngreso.map(function (item, i) {
+                                        return <tr key={(i + 1)}>
+                                            <td className="tablaNormal">{(i + 1)} </td>
+                                            <td className="tablaNormal">{item.primerFolio + 1} </td>
+                                            <td className="tablaNormal">{item.ultimoFolio}</td>
+                                            <td className="tablaNormal"> {item.cantidad} </td>
+                                            <td className="tablaNormal"> {item.fecha} </td>
+                                        </tr>
+                                    })
+                                }
+                            </table>
+                        </div>)
+                }
                 <div>
-                    <p>Ultimo folio asignado {this.state.ultimoAsignado}</p>
-                    <p>Cantidad de tickets restantes {this.state.restantes} </p>
-                    <p>Total de folios solicitados {this.state.total} </p>
-                    <p>Numero de folios vendidos {this.state.numVentas}</p>
-                    <p> Rangos de folios </p>
-                    <table className="tablaNormal">
-                        <thead>
-                            <th className="tablaNormal">N°</th>
-                            <th className="tablaNormal">Primer folio</th>
-                            <th className="tablaNormal"> Ultimo folio </th>
-                            <th className="tablaNormal"> Cantidad </th>
-                            <th className="tablaNormal"> Fecha de solicitud</th>
-                        </thead>
-
-                        {
-                            this.state.rangosIngreso.map(function (item, i) {
-                                return <tr key={(i + 1)}>
-                                    <td className="tablaNormal">{(i + 1)} </td>
-                                    <td className="tablaNormal">{item.primerFolio + 1} </td>
-                                    <td className="tablaNormal">{item.ultimoFolio}</td>
-                                    <td className="tablaNormal"> {item.cantidad} </td>
-                                    <td className="tablaNormal"> {item.fecha} </td>
-                                </tr>
-                            })
-                        }
-                    </table>
+                    
                     <div>
                         <h1>Inicio dia</h1>
                         <p>{this.TraerRango()}</p>

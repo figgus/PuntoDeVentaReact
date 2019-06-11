@@ -14,22 +14,23 @@ export class AdministradorFolios extends Component {
             rangoTotalesMax: 0,
             rangoDispMin: 0,
             rangoDispMax: 0,
-            mensaje:'',
+            mensaje: '',
+            cargando: true,
 
             ingresarNuevoSet: false,
         }
 
-        this.TraerDatos();
+        this.TraerDatos().then(() => { this.setState({ cargando: false }) });
     }
 
-    TraerDatos() {
+    async TraerDatos() {
         try {
-            this.TraerRestantes();
-            this.TraerTotales();
-            this.TraerRangoTotalMin();
-            this.TraerRangoTotalMax();
-            this.TraerRangoDisponibleMin();
-            this.TraerRangoDisponibleMax();
+            await this.TraerRestantes();
+            await this.TraerTotales();
+            await this.TraerRangoTotalMin();
+            await this.TraerRangoTotalMax();
+            await this.TraerRangoDisponibleMin();
+            await this.TraerRangoDisponibleMax();
         } catch (err) {
             this.setState({ mensaje:'El servicio de administracion de folios no esta disponible' });
         }
@@ -131,12 +132,23 @@ export class AdministradorFolios extends Component {
         return (
             <div style={this.EstiloGeneral}>
                 <h1> Panel de administracion del SAF</h1>
-                <p style={this.EstiloAlerta}> {this.state.mensaje} </p>
-                <p>Folios totales {this.state.totales}</p>
-                <p>Folios restantes: {this.state.restantes}</p>
-                <p>Rango de Folios totales :</p>
-                <p>Desde {this.state.rangoTotalesMin} hasta {this.state.rangoTotalesMax}</p>
-                <p>Rango de Folios disponibles: desde el {this.state.rangoDispMin} hasta {this.state.rangoDispMax}</p>
+                
+
+                {
+                    this.state.cargando ?
+                        (<div>
+                            <img height="50" width="50" src={require('./Imagenes/Cargando.gif')} />
+                        </div>)
+                        : (<div>
+                            <p style={this.EstiloAlerta}> {this.state.mensaje} </p>
+                            <p>Folios totales {this.state.totales}</p>
+                            <p>Folios restantes: {this.state.restantes}</p>
+                            <p>Rango de Folios totales :</p>
+                            <p>Desde {this.state.rangoTotalesMin} hasta {this.state.rangoTotalesMax}</p>
+                            <p>Rango de Folios disponibles: desde el {this.state.rangoDispMin} hasta {this.state.rangoDispMax}</p>
+                        </div>)
+                }
+
 
                 <div>
                     {

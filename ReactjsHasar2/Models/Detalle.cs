@@ -8,8 +8,6 @@ namespace ReactjsHasar2.Models.ModelsDTE
     public class Detalle
     {
         public int ID { get; set; }
-        //public int EncabezadoID { get; set; }
-        //public Encabezado Encabezado { get; set; }
 
         public int NroLinDet { get; set; }
         public CdgItem CdgItem { get; set; }
@@ -17,9 +15,8 @@ namespace ReactjsHasar2.Models.ModelsDTE
         public string DscItem { get; set; }
         public int QtyItem { get; set; }
         public int PrcItem { get; set; }
-        public int MontoItem { get; set; }//precio unitario * cantidad
+        public int MontoItem { get; set; }
 
-
-        public int montoConIva { get; set; }
+        
     }
 }

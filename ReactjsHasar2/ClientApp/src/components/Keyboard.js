@@ -14,9 +14,10 @@ export class Keyboard extends Component {
             precioTotal: 0,
             formaPago: [],
             mostrarPago: false,
-            saldo:0,
+            saldo: 0,
+            listaMedios:[],//lista de los medios de pago disponibles en bd
         }
-        
+        this.TraerMediosPago();
     }
 
     componentDidMount() {
@@ -70,24 +71,22 @@ export class Keyboard extends Component {
                     MedioPago: formaPago,
                 })
             })
-            
         });
         
         this.ImprimirBoleta(listaProd);
-        //this.EnviarFacturasApiSII();
-        this.UsarFolioEnvioSii();
         alert('Ventas guardadas con exito');
     }
 
-    EnviarFacturasApiSII(numFolio) {//envia xml a la api de facturacion electronica de hasar
+    async EnviarFacturasApiSII(numFolio) {//envia xml a la api de facturacion electronica de hasar
         const tipoDte = document.getElementById('tipoDocumento').value;
-        fetch('http://localhost:61063/enviarDTE', {//dteController
+        var response = await fetch('http://localhost:61063/enviarDTE', {//dteController
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ detalles: this.state.productos, numFolio: numFolio, tipoDocumento: tipoDte }),
-        }).then(() => this.setState({ productos: [], precioTotal: 0 }));
+        }).then((response) => { if (response.ok) { alert('Enviado al SII') } else { alert('Ocurrio un error al enviar al SII') } });
+        this.setState({ productos: [], precioTotal: 0, mostrarPago: false });
     };
 
     ImprimirBoleta(listaProd) {//recibe una lista de objectos tipo plu(producto)
@@ -97,18 +96,32 @@ export class Keyboard extends Component {
         document.body.appendChild(script);
     }
 
-    async UsarFolioEnvioSii() {
+    async UsarFolioEnvioSii() {//se llama al hacer click en 
        
         const response = await fetch('http://localhost:61063/OperacionesFoliosLocales/UsarFolio', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-        })
+        }).then((response) => {
+            if (response.ok) {
+                this.EnvioNumeroFolio(response);
+            }
+            else {
+                alert('No hay folios disponibles, por favor solicite mas');
+            }
+            });
+        
+    }
+
+    async EnvioNumeroFolio(response) {//llama las funciones despues de obtenerse el numero de folio, se llama en el callback de UsarFolioEnvioSii
         const data = await response.json();
         var numFolio = data.folioUsado;
         this.EnviarFacturasApiSII(numFolio);
         this.GuardarNuevaVenta(numFolio);
+
+        this.RegistrarVentas();
+        this.ResetState();
     }
 
         
@@ -130,28 +143,35 @@ export class Keyboard extends Component {
     }
 
     AgregarPago(idMedioPago) {
-        var total = document.getElementById('total');
-        var pago = document.getElementById('pagar');
-
-        
-        var sumatoriaPagos = 0;
-        var pagos = this.state.formaPago;
-
-        pagos.forEach(function (element) {
-            sumatoriaPagos = sumatoriaPagos + element.valor;
-        });
-        if ((total.value - pago.value) < 0 || sumatoriaPagos > total) {
-            alert('el pago no puede ser mayor al total');
-        }
-        else {
+        try {
+            var total = document.getElementById('total');
+            var pago = document.getElementById('pagar');
             var saldo = this.state.saldo - pago.value;
 
-            document.getElementById('saldo').value = (total.value - pago.value);
-            pagos.push({ forma: idMedioPago, valor: pago.value });
-            document.getElementById('pagar').value = '';
-            this.setState({ formaPago: pagos, saldo: saldo });
+            if ((this.state.saldo - pago.value) < 0) {
+                throw 'No puede pagar mas que el saldo restante';
+            }
+
+            var sumatoriaPagos = 0;
+            var pagos = this.state.formaPago;
+            pagos.forEach(function (element) {
+                sumatoriaPagos = sumatoriaPagos + element.valor;
+            });
+            if ((total.value - pago.value) < 0 || sumatoriaPagos > total) {
+                alert('el pago no puede ser mayor al total');
+            }
+            else {
+
+
+
+                document.getElementById('saldo').value = (total.value - pago.value);
+                pagos.push({ forma: idMedioPago, valor: pago.value });
+                document.getElementById('pagar').value = '';
+                this.setState({ formaPago: pagos, saldo: saldo });
+            }
+        } catch (err) {
+            alert(err);
         }
-        
         
     }
 
@@ -163,7 +183,6 @@ export class Keyboard extends Component {
     }
 
     GuardarNuevaVenta(numFolio) {//inserta en la tabla hist_fn
-        console.log(this.state.productos);
         const prods = this.state.productos;
 
         
@@ -204,17 +223,56 @@ export class Keyboard extends Component {
         });
     }
 
-    async GetMedioPagoById(idMedioPago) {
-        const url = "http://localhost:61063/api/MediosDePagoes/" + idMedioPago;
-        const response = await fetch(url);
-        const data = await response.json();
-        return await data.descripcion;
-    }
-
+    
+    //-- Acciones de Onclick
     ClickGetTotal() {
         const saldo = this.state.saldo;
         document.getElementById('pagar').value = saldo;
     }
+
+    ClickCancelar() {
+        this.setState({ mostrarPago: false });
+        this.ResetMediosDePago();
+    }
+
+    //-- fin Acciones de Onclick
+
+    ResetState() {
+        this.setState({
+            productos: [],
+            precioTotal: 0,
+            formaPago: [],
+            mostrarPago: false,
+            saldo: 0,
+        });
+    }
+
+    ResetMediosDePago() {
+        this.setState({
+            formaPago: [],
+            saldo: 0,
+        });
+    }
+
+    //-----Traer datos db
+     GetMedioPagoById(idMedioPago) {
+         let lista = this.state.listaMedios;
+         return (lista.filter(p => p.id === idMedioPago))[0].descripcion;
+    }
+
+    async TraerMediosPago() {
+        const url = "http://localhost:61063/api/MediosDePagoes/";
+        const response = await fetch(url);
+        const data = await response.json();
+        var lista = [];
+        data.forEach((currentValue) => {
+            lista.push(currentValue);
+        });
+        this.setState({ listaMedios: lista });
+    }
+
+
+    //-----fin Traer datos db
 
     render() {
         return (
@@ -280,12 +338,12 @@ export class Keyboard extends Component {
                                     <tr>
                                         <td style={this.padding}>Ofertas</td>
                                         <td style={this.padding}></td>
-                                        <td style={this.padding}> <button value="asd" onClick={() => { this.RegistrarVentas() }} > Aceptar</button></td>
+                                        <td style={this.padding}> <button value="asd" onClick={() => { this.UsarFolioEnvioSii() }} > Aceptar</button></td>
                                     </tr>
                                     <tr>
                                         <td style={this.padding}>Total</td>
                                         <td style={this.padding}> <input id="total" readOnly type="number" value={this.state.precioTotal} /> </td>
-                                        <td style={this.padding}> <button onClick={() => { this.setState({ mostrarPago:false }) }} > Cancelar</button></td>
+                                        <td style={this.padding}> <button onClick={() => { this.ClickCancelar(); }} > Cancelar</button></td>
                                     </tr>
                                     <tr>
                                         <td style={this.padding}>A pagar</td>
