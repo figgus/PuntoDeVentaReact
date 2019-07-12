@@ -1,8 +1,8 @@
-﻿#productos {
+﻿/*#productos {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
-}
+}*/
 
 body {
     background-color: cadetblue;
@@ -19,7 +19,7 @@ body {
 }
 
 
-#encabezado,#cuerpo {
+/*#encabezado,*/#cuerpo {
     border: 1px solid black;
     padding: 30px;
 }

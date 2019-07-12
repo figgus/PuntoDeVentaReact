@@ -2,41 +2,66 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReactjsHasar2.Clases;
 using ReactjsHasar2.DAL;
 using ReactjsHasar2.Models;
 using ReactjsHasar2.Models.ModelsDTE;
+using ReactjsHasar2.Services.PdfExport;
 
 namespace ReactjsHasar2.Controllers
 {
+    [Route("[controller]/")]
     [ApiController]
     public class dteController : ControllerBase
     {
         private readonly ContextoBDMysql _context = new ContextoBDMysql();
+        private readonly IExportarPdfService ServicioPDF;
+
+        public dteController(IExportarPdfService servicePDF)
+        {
+            ServicioPDF = servicePDF;
+        }
 
         [Route("/enviarDTE")]
         [HttpPost]
-        public async void EnviarDTE([FromBody]EnvioDTEpara datos)
+        public async Task<string> EnviarDTE([FromBody]EnvioDTEpara datos)
         {
-            foreach (Hist_plu venta in datos.detalles)
-            {
-                venta.Cantidad = datos.detalles.Count(p=>p.CodigoPLU==venta.CodigoPLU);
-            }
-            var ventas = datos.detalles.GroupBy(p => p.CodigoPLU).Select(y=>y.First());
-
             var lista = new List<Detalle>();
-            int i = 0;
-            foreach (Hist_plu venta in ventas)
+            if (datos.detalles != null)
             {
-                i++;
-                lista.Add(PluToDetalle(venta,i));
+                foreach (Hist_plu venta in datos.detalles)
+                {
+                    venta.Cantidad = datos.detalles.Count(p => p.CodigoPLU == venta.CodigoPLU);
+                }
+                var ventas = datos.detalles.GroupBy(p => p.CodigoPLU).Select(y => y.First());
+
+
+                int i = 0;
+                foreach (Hist_plu venta in ventas)
+                {
+                    i++;
+                    lista.Add(PluToDetalle(venta, i));
+                }
             }
+
             EnvioDTE dte = new EnvioDTE();
-            await dte.EnviarDetalles(lista,datos.numFolio,datos.tipoDocumento);
+
+            EnvioDteApi datosEnvio = new EnvioDteApi { detalles = lista, CmnaDest = datos.CmnaDest, tipoDocumento = datos.tipoDocumento, IndTraslado = datos.IndTraslado, TpoDocLiq = datos.TpoDocLiq};
+            string res=  await dte.EnviarDetalles(datosEnvio);
+            return res;
         }
 
+        [Route("/AnularVenta")]
+        [HttpPost]
+        public async Task<ActionResult> AnularVenta(int num)
+        {
+
+            return Ok();
+        }
+        
         
 
         private Detalle PluToDetalle(Hist_plu plu,int numLinea)
