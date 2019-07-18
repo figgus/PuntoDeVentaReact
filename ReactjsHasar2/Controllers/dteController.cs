@@ -9,7 +9,6 @@ using ReactjsHasar2.Clases;
 using ReactjsHasar2.DAL;
 using ReactjsHasar2.Models;
 using ReactjsHasar2.Models.ModelsDTE;
-using ReactjsHasar2.Services.PdfExport;
 
 namespace ReactjsHasar2.Controllers
 {
@@ -18,11 +17,9 @@ namespace ReactjsHasar2.Controllers
     public class dteController : ControllerBase
     {
         private readonly ContextoBDMysql _context = new ContextoBDMysql();
-        private readonly IExportarPdfService ServicioPDF;
 
-        public dteController(IExportarPdfService servicePDF)
+        public dteController( )
         {
-            ServicioPDF = servicePDF;
         }
 
         [Route("/enviarDTE")]
@@ -49,7 +46,10 @@ namespace ReactjsHasar2.Controllers
 
             EnvioDTE dte = new EnvioDTE();
 
-            EnvioDteApi datosEnvio = new EnvioDteApi { detalles = lista, CmnaDest = datos.CmnaDest, tipoDocumento = datos.tipoDocumento, IndTraslado = datos.IndTraslado, TpoDocLiq = datos.TpoDocLiq};
+            EnvioDteApi datosEnvio = new EnvioDteApi { detalles = lista, CmnaDest = datos.CmnaDest,
+                tipoDocumento = datos.tipoDocumento,
+                IndTraslado = datos.IndTraslado, TpoDocLiq = datos.TpoDocLiq,numFolioReferencia=datos.numFolioReferencia,
+                tipoDocumentoRef =datos.tipoDocumentoRef,CodRef=datos.CodRef,FmaPago=datos.FmaPago,CdgTraslado=datos.CdgTraslado};
             string res=  await dte.EnviarDetalles(datosEnvio);
             return res;
         }

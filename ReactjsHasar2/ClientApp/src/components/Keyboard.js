@@ -34,11 +34,9 @@ export class Keyboard extends Component {
         script.type = 'text/javascript';
         script.innerHTML = 'Cargar();';
         document.body.appendChild(script);
-
-
     }
 
-
+ 
 
     async VerificarExistencia() {
         var codigo = document.getElementById('codigo').value;
@@ -68,30 +66,35 @@ export class Keyboard extends Component {
     }
 
     async RegistrarVentas() {
-        var listaProd = this.state.productos;
+        try {
+            var listaProd = this.state.productos;
 
-        const formaPago = this.state.formaPago[0].forma;//cambiar cuando se agregen medios de pagos
-        listaProd.map(function (item, i) {
-            fetch(GetUrlLocal()+'api/Hist_plu', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    Monto: item['costo'],
-                    CodigoPLU: item['codigoPLU'],
-                    MedioPago: formaPago,
+            const formaPago = this.state.formaPago[0].forma;//cambiar cuando se agregen medios de pagos
+            listaProd.map(function (item, i) {
+                fetch(GetUrlLocal() + 'api/Hist_plu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        Monto: item['costo'],
+                        CodigoPLU: item['codigoPLU'],
+                        MedioPago: formaPago,
+                    })
                 })
-            })
-        });
-        
-        this.ImprimirBoleta(listaProd);
-        swal({
-            title: "Venta Terminada!",
-            text: "¡Venta Guardada con exito!",
-            icon: "success",
-        });
-        //swal("Ventas guardadas con exito");
+            });
+
+            this.ImprimirBoleta(listaProd);
+            swal({
+                title: "!Venta Terminada!",
+                text: "¡Venta Guardada con exito!",
+                icon: "success",
+            }).then(() => { this.Redirigir('/menu') });
+
+        } catch (err) {
+
+        swal("Medio de pago no valido");
+        }
     }
 
     async EnviarFacturasApiSII(/*numFolio*/) {//envia xml a la api de facturacion electronica de hasar
@@ -100,21 +103,36 @@ export class Keyboard extends Component {
         var data = {};
         data.tipoDocumento = tipoDte;
         data.detalles = this.state.productos;
-        if (document.getElementById('RutCliente')!==null) {
+        if (this.state.formaPago[0]!==null) //quizas cambiar
+            data.fmaPago = this.state.formaPago[0].forma;
+
+        if (document.getElementById('RutCliente')!==null) 
             data.RutCliente = document.getElementById('RutCliente').value;
-        }
+        
+        if (document.getElementById('numFolioReferencia') !== null) 
+            data.numFolioReferencia = document.getElementById('numFolioReferencia').value;
+        
+        if (document.getElementById('tipoDocumentoRef') !== null) 
+            data.tipoDocumentoRef = document.getElementById('tipoDocumentoRef').value;
+        
+        if (document.getElementById('CodRef') !== null)
+            data.CodRef = document.getElementById('CodRef').value;
+
+        if (document.getElementById('CdgTraslado') !== null) 
+            data.CdgTraslado = document.getElementById('CdgTraslado').value;
+        
         
         if (tipoDte === 43) {
-            data.TpoDocLiq=document.getElementById('TpoDocLiq').value;
+            if (document.getElementById('TpoDocLiq')!==null)
+                data.TpoDocLiq=document.getElementById('TpoDocLiq').value;
         }
-        if(tipoDte === 50) {
+        if(tipoDte === 52) {
             data.IndTraslado=document.getElementById('IndTraslado').value;
             data.CmnaDest = document.getElementById('CmnaDest').value;
         }
+
         console.log(data);
-        //for (var p of formulario) {
-        //    console.log(p);
-        //}
+        
         var respuesta = await fetch(GetUrlLocal()+'/enviarDTE', {//dteController
             method: 'POST',
             headers: {
@@ -159,27 +177,9 @@ export class Keyboard extends Component {
         document.body.appendChild(script);
     }
 
-    //async UsarFolioEnvioSii() {//se llama al hacer click en , quizas borrar
-       
-    //    const response = await fetch('http://localhost:61063/OperacionesFoliosLocales/UsarFolio', {
-    //        method: 'POST',
-    //        headers: {
-    //            'Content-Type': 'application/json',
-    //        },
-    //    }).then((response) => {
-    //        if (response.ok) {
-    //            this.EnvioNumeroFolio(response);
-    //        }
-    //        else {
-    //            swal('No hay folios disponibles, por favor solicite mas');
-    //        }
-    //        });
-        
-    //}
+  
 
-    async EnvioNumeroFolio(/*response*/) {//llama las funciones despues de obtenerse el numero de folio, se llama en el callback de UsarFolioEnvioSii
-        //const data = await response.json();
-        //var numFolio = data.folioUsado;
+    async EnvioNumeroFolio() {//llama las funciones despues de obtenerse el numero de folio, se llama en el callback de UsarFolioEnvioSii
         try {
             if (this.state.docSeleccionado === null)
                 throw 'Seleccione un tipo de documento';
@@ -273,10 +273,10 @@ export class Keyboard extends Component {
                 })
             }).then(function (response) { if (!response.ok) { console.log('venta no guardada') } });
         });
-        this.GuardarMediosDePagoVenta();
+        this.GuardarMediosDePagoVenta(numFolio);
     }
 
-    GuardarMediosDePagoVenta() {//guarda todos los medios de pagos usados para la venta
+    GuardarMediosDePagoVenta(numFolio) {//guarda todos los medios de pagos usados para la venta
         console.log('GuardarMediosDePagoVenta');
         const mediosPago = this.state.formaPago;
         mediosPago.forEach(function (currentValue, index, array) {
@@ -287,7 +287,8 @@ export class Keyboard extends Component {
                 },
                 body: JSON.stringify({
                     IdMedioPago: currentValue.forma,
-                    Monto: currentValue.valor
+                    Monto: currentValue.valor,
+                    NumFolio: numFolio,
                 })
             });
         });
@@ -379,48 +380,53 @@ export class Keyboard extends Component {
                 );
                 
             }
-            if (docSelect === 50) {
+            if (docSelect === 52) {
                 return (<div>
                     <p> Indicador de traslado de bienes
-                                <select id="IndTraslado">
-                        <option value="1"> Operación constituye venta </option>
-                        <option value="2"> Ventas por efectuar </option>
-                        <option value="3"> Consignaciones </option>
-                        <option value="4"> Entrega gratuita </option>
-                        <option value="5"> Traslados internos </option>
-                        <option value="6">  Otros traslados noventa</option>
-                        <option value="7"> Guía de devolución </option>
-                        <option value="8">  Traslado para exportación </option>
-                        <option value="9"> Venta para exportación  </option>
+                        <select id="IndTraslado">
+                            <option value="1"> Operación constituye venta </option>
+                            <option value="2"> Ventas por efectuar </option>
+                            <option value="3"> Consignaciones </option>
+                            <option value="4"> Entrega gratuita </option>
+                            <option value="5"> Traslados internos </option>
+                            <option value="6">  Otros traslados noventa</option>
+                            <option value="7"> Guía de devolución </option>
+                            <option value="8">  Traslado para exportación </option>
+                            <option value="9"> Venta para exportación  </option>
                         </select>
                     </p>
 
                     <p>Comuna de destino
                         <input type="text" id="CmnaDest"/>
-                        </p>
+                    </p>
+                    <p>
+                        Codigo emisor traslado exepcional
+                        <select id="CdgTraslado">
+                            <option value="1"> Exportador </option>
+                            <option value="2"> Agente de aduana </option>
+                            <option value="3"> Vendedor </option>
+                            <option value="4"> Contribuyente autorizado expresamente por el SII </option>
+                        </select>
+                    </p>
+                    Tipo de documento a modificar
+                    {this.HtmlSeleccionarTipoDocumentoRef()}
+                    {this.HtmlFolioReferencia()}
                 </div>);
                 
             }
             if (docSelect ===43) {
                 return (<div>
                     Indique el tipo de documento que se liquida
-                    <select  className="form-control form-control-sm" id="tipoDocumento">
-                        <option value="0">-- Seleccione</option>
-                        {
-                            this.state.documentosSii.map(function (item, i) {
-                                return <option value={item.id}> {item.descripcion}</option>
-                            })
-                        }
-
-                    </select>
-                     
+                    {this.HtmlSeleccionarTipoDocumentoRef()}
+                    {this.HtmlFolioReferencia()}
+                    
                 </div>);
             }
 
-            if (docSelect===55) {
+            if (docSelect===56) {//nota de debito
                 return (<div>
                     Indique el codigo de referencia
-                    <select className="form-control form-control-sm" id="tipoDocumento">
+                    <select className="form-control form-control-sm" id="CodRef">
                         <option value="1">Anula Documento de Referencia</option>
                         <option value="2">Corrige Texto Documento de Referencia</option>
                         <option value="3"> Corrige montos</option>
@@ -429,17 +435,24 @@ export class Keyboard extends Component {
                     </select>
                     <p>
                         Tipo de documento a modificar
-                        {this.HtmlSeleccionarTipoDocumento()}
+                        {this.HtmlSeleccionarTipoDocumentoRef()}
                         {this.HtmlFolioReferencia()}
                     </p>
                 </div>);
             }
-            if (docSelect === 60) {//nota de credito
+            if (docSelect === 61) {//nota de credito
                 return (<div>
-                    {this.HtmlCodigoReferencia()}
+                    Indique el codigo de referencia
+                    <select className="form-control form-control-sm" id="CodRef">
+                        <option value="1">Anula Documento de Referencia</option>
+                        <option value="2">Corrige Texto Documento de Referencia</option>
+                        <option value="3"> Corrige montos</option>
+
+
+                    </select>
                     <p>
                         Tipo de documento a modificar
-                        {this.HtmlSeleccionarTipoDocumento()}
+                        {this.HtmlSeleccionarTipoDocumentoRef()}
                         {this.HtmlFolioReferencia()}
                     </p>
                 </div>);
@@ -462,12 +475,24 @@ export class Keyboard extends Component {
         </select>);
     }
 
+    HtmlSeleccionarTipoDocumentoRef() {
+        return (<select className="form-control form-control-sm" id="tipoDocumentoRef">
+            <option value="0">-- Seleccione</option>
+            {
+                this.state.documentosSii.map(function (item, i) {
+                    return <option value={item.id}> {item.descripcion}</option>
+                })
+            }
+
+        </select>);
+    }
+
     HtmlFolioReferencia() {
         return (
         <form className="form-inline">
             <div className="form-group mb-2" id="encabezado">
                 <p>Ingrese el numero de folio de la venta
-                            <input className="form-control form-control-sm" id="numFolio"></input>
+                            <input className="form-control form-control-sm" id="numFolioReferencia"></input>
                 </p>
              </div>
         </form>);
@@ -476,7 +501,7 @@ export class Keyboard extends Component {
     HtmlCodigoReferencia() {
         return (
             <p>Indique el codigo de referencia
-                < select className = "form-control form-control-sm" id = "tipoDocumento" >
+                < select className = "form-control form-control-sm" id = "tipoDocumentoRef" >
                     <option value="1">Anula Documento de Referencia</option>
                     <option value="2">Corrige Texto Documento de Referencia</option>
                     <option value="3"> Corrige montos</option>
@@ -501,9 +526,7 @@ export class Keyboard extends Component {
             <div>
                 <form className="form-inline">
                     <div className="form-group mb-2" id="encabezado">
-                        <p> Operador 9999 -Administrador</p>
-                        <p>Cliente: Consumidor final <button className="btn btn-secondary">Ver clientes</button> </p>
-                        
+                       
                         <p>Tipo documento
                             <select onChange={() => { this.ChangeDocSii() }} className="form-control form-control-sm" id="tipoDocumento">
                                 <option value="0">-- Seleccione</option>
@@ -556,6 +579,7 @@ export class Keyboard extends Component {
                     
                 </div>
                 <center>
+                    <p> <b>Total a pagar: {this.state.precioTotal}</b> </p>
                     <Popup
                         trigger={<button id="btnPagar" className="btn btn-success" onClick={() => this.setState({ mostrarPago: true })}>Pagar</button>}
                         modal
@@ -592,7 +616,7 @@ export class Keyboard extends Component {
                             </table>
                             <table style={this.estiloTabla}>
                                 <thead>
-                                    <th style={this.estiloTabla}> Forma </th>
+                                    <th style={this.estiloTabla}> Forma de pago</th>
                                     <th style={this.estiloTabla}> Valor </th>
                                 </thead>
                                 {

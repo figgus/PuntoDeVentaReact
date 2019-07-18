@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ReactjsHasar2.Services;
-using ReactjsHasar2.Services.PdfExport;
 using System;
 
 namespace ReactjsHasar2
@@ -24,7 +23,6 @@ namespace ReactjsHasar2
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IOperacionesFoliosLocales, OperacionesFoliosLocalesService>();
-            services.AddTransient<IExportarPdfService, ExportarPdfService>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

@@ -17,6 +17,11 @@ namespace ReactjsHasar2.Models
         public string RutCliente { get; set; }
         public int NumSucursal { get; set; }
         public int NumCaja { get; set; }
+        public int? numFolioReferencia { get; set; }
+        public int? tipoDocumentoRef { get; set; }
+        public int? CodRef { get; set; }
+        public int? FmaPago { get; set; }
+        public int? CdgTraslado { get; set; }
 
     }
 }
