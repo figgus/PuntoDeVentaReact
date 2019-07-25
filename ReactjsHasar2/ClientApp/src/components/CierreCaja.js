@@ -46,8 +46,7 @@ export class CierreCaja extends Component {
         hour = (hour < 10 ? "0" : "") + hour;
         min = (min < 10 ? "0" : "") + min;
 
-        var today = year + "-" + month + "-" + day,
-            displayTime = hour + ":" + min;
+        var today = year + "-" + month + "-" + day;
 
         document.getElementById('fecha').value = today;
     }

@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import Popup from "reactjs-popup";
 
-
-
 export class Keyboard extends Component {
     displayName = Keyboard.name
     
@@ -40,7 +38,7 @@ export class Keyboard extends Component {
 
     async VerificarExistencia() {
         var codigo = document.getElementById('codigo').value;
-        if (codigo != '' || codigo>0) {
+        if (codigo !== '' || codigo>0) {
             try {
                 const url = GetUrlLocal()+'/api/plu/' + codigo;
                 var existe = await fetch(url);
@@ -71,7 +69,7 @@ export class Keyboard extends Component {
 
             const formaPago = this.state.formaPago[0].forma;//cambiar cuando se agregen medios de pagos
             listaProd.map(function (item, i) {
-                fetch(GetUrlLocal() + 'api/Hist_plu', {
+                fetch(GetUrlLocal() + '/api/Hist_plu', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -97,9 +95,11 @@ export class Keyboard extends Component {
         }
     }
 
+
+
     async EnviarFacturasApiSII(/*numFolio*/) {//envia xml a la api de facturacion electronica de hasar
         const tipoDte = Number( document.getElementById('tipoDocumento').value);
-        console.log(tipoDte);
+       // console.log(tipoDte);
         var data = {};
         data.tipoDocumento = tipoDte;
         data.detalles = this.state.productos;
@@ -149,7 +149,7 @@ export class Keyboard extends Component {
         else {
             console.log('EnviarFacturasApiSII fallo');
         }
-        this.setState({ productos: [], precioTotal: 0, mostrarPago: false });
+        this.setState({ /*productos: [],*/ precioTotal: 0, mostrarPago: false });
     };
 
 
@@ -170,7 +170,7 @@ export class Keyboard extends Component {
     //    //const data = await response.json();
     //}
 
-    ImprimirBoleta(listaProd) {//recibe una lista de objectos tipo plu(producto)
+    ImprimirBoleta(listaProd) {//recibe una lista de objectos tipo plu(producto) y la imprime en la impresora fiscal
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.innerHTML = 'print(' + JSON.stringify(listaProd) + ');';
@@ -187,7 +187,7 @@ export class Keyboard extends Component {
 
 
             this.RegistrarVentas();
-            this.ResetState();
+            //this.ResetState();
         } catch (err) {
             swal(String( err));
         }
@@ -203,9 +203,9 @@ export class Keyboard extends Component {
     }
 
     estiloTabla = {
-        border: '1px solid black',
+        'border': '1px solid black',
         'border-collapse': 'collapse',
-        padding: '15px'
+        'padding': '15px'
     }
 
     padding = {

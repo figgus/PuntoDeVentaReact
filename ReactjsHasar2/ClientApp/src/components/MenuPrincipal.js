@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
 export class MenuPrincipal extends Component {
@@ -14,7 +13,7 @@ export class MenuPrincipal extends Component {
     render() {
         return (
             <div>
-                <p> <h1> Ventas: </h1> </p>
+                <h1> Ventas: </h1>
                 <hr/>
                 <LinkContainer to={'/facturar'} exact>
                     <button className="btn btn-primary">Facturar</button>
@@ -57,7 +56,7 @@ export class MenuPrincipal extends Component {
                 <p></p>
 
 
-                <p><h1>Stock y Compras</h1></p>
+                <h1>Stock y Compras</h1>
                 <hr/>
                 <LinkContainer to={'/Articulos'} exact>
                     <button className="btn btn-primary">Articulos</button>
@@ -86,7 +85,7 @@ export class MenuPrincipal extends Component {
                     <button className="btn btn-primary">Impresion de estiquetas</button>
                 </LinkContainer>
 
-                <p><h1>Administracion</h1></p>
+                <h1>Administracion</h1>
                 <hr />
                 <LinkContainer to={'/AdministradorFolios'} exact>
                     <button className="btn btn-primary">Servicio Folios </button>

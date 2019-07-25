@@ -7,7 +7,7 @@ namespace ReactjsHasar2.Models
 {
     public class CdgItem
     {
-        //public int ID { get; set; }
+        public int ID { get; set; }
         public string TpoCodigo { get; set; }
         public string VlrCodigo { get; set; }
     }

@@ -3,7 +3,6 @@ import { Route } from 'react-router';
 
 
 import { Keyboard } from './components/Keyboard';
-import { Cabecera } from './components/Cebecera';
 import { MenuPrincipal } from './components/MenuPrincipal';
 import { TotalVendido } from './components/TotalVendido';
 import { CierreCaja } from './components/CierreCaja';

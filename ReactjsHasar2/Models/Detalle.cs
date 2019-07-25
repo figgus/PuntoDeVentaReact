@@ -16,7 +16,8 @@ namespace ReactjsHasar2.Models.ModelsDTE
         public int QtyItem { get; set; }
         public int PrcItem { get; set; }
         public int MontoItem { get; set; }
+        public int NumeroFolio { get; set; }
 
-        
+
     }
 }

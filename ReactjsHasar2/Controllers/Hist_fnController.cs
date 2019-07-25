@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ReactjsHasar2.DAL;
 using ReactjsHasar2.Models;
 
+
 namespace ReactjsHasar2.Controllers
 {
     [Route("api/[controller]")]
@@ -48,6 +49,7 @@ namespace ReactjsHasar2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHist_fn([FromRoute] int id, [FromBody] Hist_fn hist_fn)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -89,6 +91,7 @@ namespace ReactjsHasar2.Controllers
             //}
             ventas.Fecha = DateTime.Now;
             ventas.FechaUltAct = DateTime.Now.ToShortDateString();
+            ventas.Anulada = 0;
             _context.Hist_fn.Add(ventas);
 
             await _context.SaveChangesAsync();

@@ -36,7 +36,7 @@
     <script src="js/zip-ext.js"></script>
     <script src="js/zip-fs.js"></script>
     <script src="js/mime-types.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/recta/dist/recta.js"></script>
     <script type="text/javascript">
         var impresoraDefault;
         function Cargar() {
@@ -73,9 +73,10 @@
         //Do printing...
         function print(listaVentas) {
             if (jspmWSStatus()) {
+                const fecha = new Date().toLocaleString();
                 //Create a ClientPrintJob
                 var cpj = new JSPM.ClientPrintJob();
-                
+
                 //usa la impresora  por defecto
                 cpj.clientPrinter = new JSPM.InstalledPrinter(impresoraDefault);
 
@@ -85,9 +86,23 @@
                 var newLine = '\x0A'; //LF byte in hex notation
 
                 var cmds = esc; //Initializes the printer (ESC )
-                cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
-                cmds += 'Boleta Hasar'; //text to print
+                cmds +=  '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+                cmds += '        Hasar    '; //text to print
+                cmds += newLine;
+                cmds += newLine;
+                cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+                cmds += 'Hasar Chile R.U.T :77441010-4'; //text to print
+                cmds += newLine;
+                cmds += 'Rosario Norte 615'; //text to print
+                cmds += newLine;
+                cmds += 'Giro'; //text to print
+                cmds += newLine;
+                cmds += 'Version '; //text to print
+                cmds += newLine;
+                
+                cmds += 'Fecha de emision: ' + fecha; //text to print
 
+                cmds += newLine;
                 var cont = 0;
                 listaVentas.forEach(function (currentValue, index, array) {
                     cmds += newLine;
@@ -99,23 +114,42 @@
                     cont = cont + currentValue.costo;
                 });
 
-                
+                cmds += fecha;
                 cmds += newLine + newLine;
-                cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
+                cmds += esc + '!' + '\x08'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
                 cmds += 'Total: ' + cont;
-                cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
                 cmds += newLine + newLine;
-                cmds += new Date().toLocaleString();
-
+                cmds +='\x1c\x7d\x74\x04';
+              
+                console.log(cmds);
                 cpj.printerCommands = cmds;
+
                 //Send print job to printer!
                 cpj.sendToClient();
             }
             else {
-                alert('no entro');
+                console.log('Impresora no encontrada');
             }
         }
+        
+        
+        //var printer = new Recta('8102025590', '1811');
 
+        //function onClick() {
+        //    printer.open().then(function () {
+        //        printer.align('center')
+        //            .text('Hello World !!')
+        //            .bold(true)
+        //            .text('This is bold text')
+        //            .bold(false)
+        //            .underline(true)
+        //            .text('This is underline text')
+        //            .underline(false)
+        //            .barcode('CODE39', '123456789')
+        //            .cut()
+        //            .print()
+        //    })
+        //}
     </script>
 </head>
 <body>

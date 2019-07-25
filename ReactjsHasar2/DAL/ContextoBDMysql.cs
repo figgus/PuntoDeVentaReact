@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReactjsHasar2.Models;
+using ReactjsHasar2.Models.ModelsDTE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace ReactjsHasar2.DAL
         public DbSet<TipoDocumento> Tipo_Documento { get; set; }
         public DbSet<NivelSeguridad> Nivel_Seguridad { get; set; }
         public DbSet<Operador> Operador { get; set; }
+        public DbSet<Detalle> Detalle { get; set; }
+        public DbSet<AnulacionesVentas> AnulacionesVentas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

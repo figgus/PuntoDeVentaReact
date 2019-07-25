@@ -56,7 +56,7 @@ export class FoliosLocal extends Component {
                         max = currentValue.numFolio;
                     }
 
-                    const response = fetch('http://localhost:61063/api/FoliosLocals', {
+                    /*const response =*/ fetch('http://localhost:61063/api/FoliosLocals', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export class FoliosLocal extends Component {
     }
 
     RegistrarSolicitudFolios(cantidad, min, max) {
-        const response = fetch('http://localhost:61063/api/Solicituds', {
+       /* const response =*/ fetch('http://localhost:61063/api/Solicituds', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ export class FoliosLocal extends Component {
                 {
                     this.state.cargando ?
                         (<div>
-                            <img height="50" width="50" src={require('./Imagenes/Cargando.gif')} />
+                            <img height="50" alt="" width="50" src={require('./Imagenes/Cargando.gif')} />
                         </div>)
                         : (<div>
                             <p>Ultimo folio asignado {this.state.ultimoAsignado}</p>

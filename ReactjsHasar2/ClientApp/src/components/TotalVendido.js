@@ -52,7 +52,7 @@ export class TotalVendido extends Component {
     RemoverDuplicados(arreglo) {
         for (var i = 0; i < arreglo.length; i++) {
             for (var a = 0; a < arreglo.length; a++) {
-                if (arreglo[i] == arreglo[a] && i!==a) {
+                if (arreglo[i] === arreglo[a] && i!==a) {
                     arreglo.splice(a, 1);
                     a--;
                 }
@@ -74,7 +74,7 @@ export class TotalVendido extends Component {
         var ventas = this.state.productosVendidos;
         var cont = 0;
         ventas.forEach(function (element) {
-            if (element['categoriaProd'] == nomCategoria) {
+            if (element['categoriaProd'] === nomCategoria) {
                 cont = cont + element['monto'];
             }
         });

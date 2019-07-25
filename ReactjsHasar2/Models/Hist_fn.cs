@@ -29,5 +29,6 @@ namespace ReactjsHasar2.Models
         
         public int? CategoriaFk { get; set; }
         public int? numeroFolio { get; set; }
+        public int? Anulada { get; set; }
     }
 }

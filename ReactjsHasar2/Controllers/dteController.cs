@@ -56,10 +56,42 @@ namespace ReactjsHasar2.Controllers
 
         [Route("/AnularVenta")]
         [HttpPost]
-        public async Task<ActionResult> AnularVenta(int num)
+        public async Task<ActionResult> AnularVenta(EnvioDteApi datos)
         {
+            try
+            {
+                List<Detalle> ventas = new List<Detalle>();
 
-            return Ok();
+
+                EnvioDTE dte = new EnvioDTE();
+
+                EnvioDteApi datosEnvio = new EnvioDteApi
+                {
+                    detalles = datos.detalles,
+                    CmnaDest = datos.CmnaDest,
+                    tipoDocumento = datos.tipoDocumento,
+                    IndTraslado = datos.IndTraslado,
+                    TpoDocLiq = datos.TpoDocLiq,
+                    numFolioReferencia = datos.numFolioReferencia,
+                    tipoDocumentoRef = datos.tipoDocumentoRef,
+                    CodRef = datos.CodRef,
+                    FmaPago = datos.FmaPago,
+                    CdgTraslado = datos.CdgTraslado
+                };
+                string res = await dte.EnviarDetalles(datosEnvio);
+
+                //foreach (Hist_fn venta in _context.Hist_fn.Where(p=>p.numeroFolio==datos.numFolio))
+                //{
+                //    venta.Anulada = true;
+                //    await _context.SaveChangesAsync();
+                //}
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { resStatus=false, mensaje=ex.Message});
+            }
+            return Ok(new { resStatus=true, mensaje ="Venta anulada con exito"});
         }
         
         
