@@ -13,7 +13,6 @@ namespace ReactjsHasar2.DAL
         public DbSet<libro_iva> libro_iva { get; set; }
         public DbSet<plu> plu { get; set; }
         public DbSet<Hist_plu> Hist_plu { get; set; }
-       // public DbSet<Categoria_Producto> Categoria_Producto { get; set; }
         public DbSet<Subfuncion> subfuncion { get; set; }
         public DbSet<Zeta> Zeta { get; set; }
         public DbSet<Hist_fn> Hist_fn { get; set; }
@@ -29,17 +28,17 @@ namespace ReactjsHasar2.DAL
             optionsBuilder.UseMySQL("Server=192.168.100.59;Database=puntodeventa;Uid=hasar;Pwd=1234;Convert Zero Datetime=True");
         }
 
-        public DbSet<ReactjsHasar2.Models.Historico_rendicion> Historico_rendicion { get; set; }
+        public DbSet<Historico_rendicion> Historico_rendicion { get; set; }
 
-        public DbSet<ReactjsHasar2.Models.FoliosLocal> FoliosLocal { get; set; }
+        public DbSet<FoliosLocal> FoliosLocal { get; set; }
 
-        public DbSet<ReactjsHasar2.Models.Solicitud> Solicitud { get; set; }
+        public DbSet<Solicitud> Solicitud { get; set; }
 
-        public DbSet<ReactjsHasar2.Models.MediosDePago> MediosDePago { get; set; }
+        public DbSet<MediosDePago> MediosDePago { get; set; }
 
-        public DbSet<ReactjsHasar2.Models.Ajustes> Ajustes { get; set; }
+        public DbSet<Ajustes> Ajustes { get; set; }
 
-        public DbSet<ReactjsHasar2.Models.RelacionPagosProducto> RelacionPagosProducto { get; set; }
+        public DbSet<RelacionPagosProducto> RelacionPagosProducto { get; set; }
 
 
     }
